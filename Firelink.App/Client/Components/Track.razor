@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.SignalR.Client
+@implements IAsyncDisposable
+@inject NavigationManager NavigationManager
+
+<div class="wrapper" style="background: radial-gradient(circle, rgba(0,0,0,0) 5%, rgba( @color ,0.5 ) 100%);">
+    <div class="track">
+        <TrackInfo Track="track"></TrackInfo>
+        <Wave Color="@color" Levels="levels"></Wave>
+        <div></div>
+    </div>
+</div>
+
+@code {
+    private TrackDto? track;
+    private string color;
+    private HubConnection? hubConnection;
+    private List<double>? levels = new List<double>();
+    private string bgcolor;
+
+    private async Task Connect()
+    {
+        hubConnection = new HubConnectionBuilder().WithUrl(NavigationManager.ToAbsoluteUri("/trackhub")).Build();
+
+        hubConnection.On<TrackDto>("TrackChange", OnTrackChange);
+
+        await hubConnection.StartAsync();
+    }
+
+    private void OnTrackChange(TrackDto newTrack)
+    {
+        track = newTrack;
+        color = newTrack.RGBColor;
+        levels = newTrack.Levels;
+        bgcolor = $"";
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Connect();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection != null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+
+}

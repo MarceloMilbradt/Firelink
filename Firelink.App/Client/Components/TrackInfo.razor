@@ -1,0 +1,14 @@
+﻿@using System.Net.Mime
+@if (Track != null)
+{
+    <div>
+        <h2>@Track.Name</h2>
+        <p>@Track.Album.Name @Track.Album.ReleaseDate - @Track.Artists.Name</p>
+        <img src="@Track.Album.Image.Url" />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public TrackDto? Track { get; set; }
+}
