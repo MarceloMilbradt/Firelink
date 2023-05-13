@@ -19,10 +19,10 @@ public class AuthEndpoints : IEndpointDefinition
         return TypedResults.Ok(new ResultResponse<bool>(isLoggedIn, true));
     }
 
-    private static async Task LoginWithToken(SpotifyAuthService authService, string code)
+    private static async Task<IResult> LoginWithToken(SpotifyAuthService authService, string code)
     {
         await authService.LogIn(code);
-        Results.Redirect("/");
+        return Results.Redirect("/");
     }
 
     private static IResult GotoLogin(SpotifyAuthService authService)

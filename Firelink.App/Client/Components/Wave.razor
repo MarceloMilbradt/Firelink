@@ -1,7 +1,7 @@
 ﻿<svg viewBox="0 0 100 10" class="wave">
-    @for (var i = 0; i < Levels.Count; i += step)
+    @for (var i = 0; i < Levels.Count(); i += step)
     {
-        var loudness = Levels[i];
+        var loudness = Levels.ElementAt(i);
         var h = Math.Round(loudness * 100) / 2;
         h = Math.Max(h, 1);
         var y1 = Format(50d - h);
@@ -13,7 +13,7 @@
 
 @code {
     [Parameter]
-    public List<double> Levels { get; set; }
+    public IEnumerable<double> Levels { get; set; }
     [Parameter]
     public string Color { get; set; } = "0,0,0";
     public int step = 10;

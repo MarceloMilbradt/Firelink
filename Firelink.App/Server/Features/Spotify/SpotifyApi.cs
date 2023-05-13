@@ -5,25 +5,18 @@ using SpotifyAPI.Web;
 
 namespace Firelink.App.Server.Features.Spotify;
 
-public class SpotifyApi : ISpotifyAPI
+public class SpotifyApi : ISpotifyConnection
 {
-    protected readonly string _url;
-    protected readonly string _clientId;
-    protected readonly string _clientSecret;
+    private readonly string _url;
+    private readonly string _clientId;
+    private readonly string _clientSecret;
     public SpotifyClient? Client { private set; get; }
-    IAppCache cache = new CachingService();
-    private AuthorizationCodeTokenResponse _authorizationCodeTokenResponse;
 
     public SpotifyApi(IConfiguration configuration)
     {
-        // _clientId = configuration.spotify.clientId;
-        // _clientSecret = configuration.spotify.clientSecret;
-        // _authorizationCodeTokenResponse =
-            // FileManager.ReadFromJsonFile<AuthorizationCodeTokenResponse>("credentials.json");
-        // if (_authorizationCodeTokenResponse != null && !_authorizationCodeTokenResponse.IsExpired)
-        // {
-        //     LogIn(_authorizationCodeTokenResponse);
-        // }
+        _url = configuration.GetValue<string>("Spotify:RedirectUrl")!;
+        _clientId = configuration.GetValue<string>("Spotify:ClientId")!;
+        _clientSecret = configuration.GetValue<string>("Spotify:ClientSecret")!;
     }
 
     public async Task<bool> Connect(string code)
@@ -53,5 +46,8 @@ public class SpotifyApi : ISpotifyAPI
 public interface ISpotifyAPI
 {
     public SpotifyClient? Client { get; }
+}
+public interface ISpotifyConnection : ISpotifyAPI
+{
     public Task<bool> Connect(string code);
 }

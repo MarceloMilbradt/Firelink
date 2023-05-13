@@ -4,11 +4,11 @@ namespace Firelink.App.Server.Features.Spotify.Auth;
 
 public class SpotifyAuthService
 {
-    private readonly ISpotifyAPI _spotify;
+    private readonly ISpotifyConnection _spotify;
     private readonly string? _url;
     private readonly string? _clientId;
 
-    public SpotifyAuthService(ISpotifyAPI spotify, IConfiguration configuration)
+    public SpotifyAuthService(ISpotifyConnection spotify, IConfiguration configuration)
     {
         _spotify = spotify;
         _url = configuration.GetValue<string>("Spotify:RedirectUrl");
