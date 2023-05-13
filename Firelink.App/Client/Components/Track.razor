@@ -14,7 +14,7 @@
     private TrackDto? track;
     private string color;
     private HubConnection? hubConnection;
-    private List<double>? levels = new List<double>();
+    private IEnumerable<double>? levels = new List<double>();
     private string bgcolor;
 
     private async Task Connect()
