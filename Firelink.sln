@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firelink.App.Server", "Firelink.App\Server\Firelink.App.Server.csproj", "{7DA0D34B-B491-4611-98CA-2A4F1B1BB1C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firelink.App.Client", "Firelink.App\Client\Firelink.App.Client.csproj", "{AB916F3A-D06F-40B2-98F3-38D8006F809C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firelink.App.Shared", "Firelink.App\Shared\Firelink.App.Shared.csproj", "{17C09E04-2DFC-4B3E-BEBE-2BA1A23D199E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7DA0D34B-B491-4611-98CA-2A4F1B1BB1C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DA0D34B-B491-4611-98CA-2A4F1B1BB1C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DA0D34B-B491-4611-98CA-2A4F1B1BB1C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DA0D34B-B491-4611-98CA-2A4F1B1BB1C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB916F3A-D06F-40B2-98F3-38D8006F809C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB916F3A-D06F-40B2-98F3-38D8006F809C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB916F3A-D06F-40B2-98F3-38D8006F809C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB916F3A-D06F-40B2-98F3-38D8006F809C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17C09E04-2DFC-4B3E-BEBE-2BA1A23D199E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17C09E04-2DFC-4B3E-BEBE-2BA1A23D199E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17C09E04-2DFC-4B3E-BEBE-2BA1A23D199E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17C09E04-2DFC-4B3E-BEBE-2BA1A23D199E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
