@@ -64,6 +64,7 @@ public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
             Name = track.Name,
             Color = color,
             RGBColor = $"{color.R},{color.G},{color.B}",
+            HsvColor = Hsv.ConvertToHSV(color),
             Album = MapAlbumDto(track),
             Artists = MapArtitsDto(track),
             Levels = WaveForm.FromTrackAnalysis(analysisTask.Result),

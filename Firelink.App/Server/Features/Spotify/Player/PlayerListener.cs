@@ -1,6 +1,7 @@
-﻿using Firelink.App.Server.Features.Spotify.ColorScraping;
-using Firelink.App.Shared;
+﻿using Firelink.App.Shared;
 using Firelink.Application.Common.Interfaces;
+using Firelink.Application.Tracks.Events.ColorChanged;
+using Firelink.Application.Tracks.Events.TrackChanged;
 using Firelink.Application.Tracks.Queries.GetCurrentTrack;
 using MediatR;
 
@@ -68,7 +69,6 @@ public class PlayerListener : BackgroundService
         {
             _logger.LogInformation("Now listening to {track}", "Nothing");
             _currentAlbumId = string.Empty;
-            await _mediator.Publish(new AlbumChangeNotification(string.Empty), stoppingToken);
         }
     }
 
@@ -78,11 +78,11 @@ public class PlayerListener : BackgroundService
         {
             _logger.LogInformation("Now listening to {track}", currentlyPlaying.Name);
             _currentTrack = currentlyPlaying;
-            await _mediator.Publish(new TrackChangeNotification(_currentTrack), stoppingToken);
+            await _mediator.Publish(new TrackChangedNotification(_currentTrack), stoppingToken);
             if (_currentTrack.Album.Id != _currentAlbumId)
             {
                 _currentAlbumId = _currentTrack.Album.Id;
-                await _mediator.Publish(new AlbumChangeNotification(hsvColor.ToString()), stoppingToken);
+                await _mediator.Publish(new ColorChangedNotification(_currentTrack.HsvColor), stoppingToken);
             }
         }
     }

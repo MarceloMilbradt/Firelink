@@ -4,6 +4,6 @@ public class PlayerEndpoints: IEndpointDefinition
 {
     public void DefineEndpoints(WebApplication app)
     {
-        app.MapPost("player/stop");
+        // app.MapPost("player/stop");
     }
 }

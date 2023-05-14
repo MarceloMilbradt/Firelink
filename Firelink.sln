@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Firelink.App
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Firelink.App\Infrastructure\Infrastructure.csproj", "{84DB59F0-6FAA-4497-B418-2CE79FD6CCC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuyaConnector", "Firelink.App\TuyaConnector\TuyaConnector.csproj", "{F68A1803-1433-4818-84A1-82C494466855}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{84DB59F0-6FAA-4497-B418-2CE79FD6CCC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84DB59F0-6FAA-4497-B418-2CE79FD6CCC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84DB59F0-6FAA-4497-B418-2CE79FD6CCC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F68A1803-1433-4818-84A1-82C494466855}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F68A1803-1433-4818-84A1-82C494466855}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F68A1803-1433-4818-84A1-82C494466855}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F68A1803-1433-4818-84A1-82C494466855}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
