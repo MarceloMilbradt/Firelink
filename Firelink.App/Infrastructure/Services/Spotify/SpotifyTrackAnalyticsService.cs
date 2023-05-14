@@ -14,10 +14,10 @@ public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
     private readonly IAppCache _cache;
     private readonly ISpotifyApi _spotifyApi;
 
-    public SpotifyTrackAnalyticsService(ISpotifyApi spotifyApi)
+    public SpotifyTrackAnalyticsService(ISpotifyApi spotifyApi, IAppCache cache)
     {
         _spotifyApi = spotifyApi;
-        _cache = new CachingService();
+        _cache = cache;
     }
 
     public async Task<TrackDto?> GetTrackWithFeatures(CancellationToken cancellationToken)

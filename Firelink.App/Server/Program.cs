@@ -1,9 +1,9 @@
 using Firelink.App.Server;
+using Firelink.Application;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddRazorPages();
 builder.Services.AddEndpoints(typeof(IEndpointDefinition));
@@ -13,17 +13,32 @@ builder.Services.AddResponseCompression(options =>
         .MimeTypes
         .Concat(new[] {"application/octect-stream"})
 );
+
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo()
+    {
+        Title = "Firelink API",
+        Version = "v1"
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Firelink API v1"));
 }
 else
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 app.UseResponseCompression();
@@ -39,5 +54,7 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapFallbackToFile("index.html");
 app.UseEndpoints();
+
+
 
 app.Run();

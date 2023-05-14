@@ -20,6 +20,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Application\Application.csproj" />
         <ProjectReference Include="..\Client\Firelink.App.Client.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\Shared\Firelink.App.Shared.csproj" />
     </ItemGroup>
 

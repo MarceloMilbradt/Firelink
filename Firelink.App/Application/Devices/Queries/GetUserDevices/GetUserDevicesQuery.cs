@@ -1,12 +1,16 @@
-﻿using Firelink.Application.Common.Interfaces;
+﻿using Firelink.App.Shared.Devices;
+using Firelink.Application.Common.Interfaces;
 using MediatR;
 using TuyaConnector.Data;
 
 namespace Firelink.Application.Devices.Queries.GetUserDevices;
 
-public record GetUserDevicesQuery : IRequest<IEnumerable<Device>>;
+public record GetUserDevicesQuery : IRequest<IEnumerable<DeviceDto>>
+{
+    public static readonly GetUserDevicesQuery Default = new();
+}
 
-internal sealed class GetUserDevicesQueryHandler : IRequestHandler<GetUserDevicesQuery, IEnumerable<Device>>
+internal sealed class GetUserDevicesQueryHandler : IRequestHandler<GetUserDevicesQuery, IEnumerable<DeviceDto>>
 {
     private readonly ITuyaConnector _tuyaConnector;
 
@@ -15,9 +19,16 @@ internal sealed class GetUserDevicesQueryHandler : IRequestHandler<GetUserDevice
         _tuyaConnector = tuyaConnector;
     }
 
-    public async Task<IEnumerable<Device>> Handle(GetUserDevicesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<DeviceDto>> Handle(GetUserDevicesQuery request, CancellationToken cancellationToken)
     {
         var devices = await _tuyaConnector.GetUserDevices(cancellationToken);
-        return devices;
+        return devices.Select(device =>
+            new DeviceDto
+            {
+                Id = device.Id,
+                ProductName = device.ProductName,
+                Name = device.Name,
+                Online = device.IsOnline
+            });
     }
 }

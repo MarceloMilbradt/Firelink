@@ -1,24 +1,30 @@
-﻿using MediatR;
+﻿using Firelink.Application.Common.Interfaces;
+using MediatR;
+using TuyaConnector.Data;
 
 namespace Firelink.Application.Tracks.Events.ColorChanged;
 
 internal sealed class ColorChangedNotificationHandler : INotificationHandler<ColorChangedNotification>
 {
-    public Task Handle(ColorChangedNotification notification, CancellationToken cancellationToken)
+    private readonly ITuyaConnector _tuyaConnector;
+
+    public ColorChangedNotificationHandler(ITuyaConnector tuyaConnector)
     {
-        try
+        _tuyaConnector = tuyaConnector;
+    }
+
+    public async Task Handle(ColorChangedNotification notification, CancellationToken cancellationToken)
+    {
+        var color = notification.NewColor;
+        var devices = await _tuyaConnector.GetUserDevices(cancellationToken);
+        var command = new Command
         {
-            var color = notification.NewColor;
-            if (string.IsNullOrEmpty(color))
-            {
-            }
-            else
-            {
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ErrorMessages.ERROR_WHILE_CONNECTING_DEVICES, ex);
-        }
+            Code = "colour_data",
+            Value = color,
+        };
+
+        var deviceTasks = devices
+            .Select(device => _tuyaConnector.SendCommandToDevice(device.Id!, command, cancellationToken)).ToList();
+        await Task.WhenAll(deviceTasks);
     }
 }

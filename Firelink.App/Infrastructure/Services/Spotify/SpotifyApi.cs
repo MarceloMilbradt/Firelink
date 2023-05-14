@@ -15,8 +15,8 @@ public class SpotifyApi : ISpotifyApi
     {
         var spotifyConfig = configuration.GetSection("Spotify");
         _url = spotifyConfig["RedirectUrl"]!;
-        _clientId = spotifyConfig["Spotify:ClientId"]!;
-        _clientSecret = spotifyConfig["Spotify:ClientSecret"]!;
+        _clientId = spotifyConfig["ClientId"]!;
+        _clientSecret = spotifyConfig["ClientSecret"]!;
     }
     public async Task<FullTrack?> GetCurrentTrack(CancellationToken cancellationToken)
     {

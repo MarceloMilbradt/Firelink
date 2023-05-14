@@ -4,7 +4,9 @@ using TuyaConnector.Data;
 
 namespace Firelink.Application.Devices.Commands.TurnOnDevices;
 
-public record TurnOnDeviceCommand(string DeviceId) : IRequest<bool>;
+public record TurnOnDeviceCommand(string DeviceId) : IRequest<bool>
+{
+}
 
 internal sealed class TurnOnDeviceCommandHandler : IRequestHandler<TurnOnDeviceCommand, bool>
 {
