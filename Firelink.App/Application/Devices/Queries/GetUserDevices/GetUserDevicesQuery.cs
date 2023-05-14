@@ -28,7 +28,7 @@ internal sealed class GetUserDevicesQueryHandler : IRequestHandler<GetUserDevice
                 Id = device.Id,
                 ProductName = device.ProductName,
                 Name = device.Name,
-                Online = device.IsOnline
+                Online = Convert.ToBoolean(device.IsOnline)
             });
     }
 }

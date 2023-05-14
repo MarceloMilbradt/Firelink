@@ -4,16 +4,18 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>Firelink.App</AssemblyName>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DebugSymbols>false</DebugSymbols>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
-        <PackageReference Include="LazyCache" Version="2.4.0" />
         <PackageReference Include="MediatR" Version="12.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.4" />
         <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.1-dev-00910" />
-        <PackageReference Include="SpotifyAPI.Web" Version="7.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />

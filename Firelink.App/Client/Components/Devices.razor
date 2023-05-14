@@ -1,0 +1,25 @@
+﻿@inject HttpClient Http
+
+
+@if (devices != null && devices.Any())
+{
+    @foreach (var device in devices)
+    {
+        <div>
+            <span>@device.ProductName - @device.Name</span>
+            <span style="color: @(device.Online ? "green" : "red");">●</span>
+        </div>
+    }
+}
+
+@code {
+    private IEnumerable<DeviceDto> devices;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetFromJsonAsync<ResultResponse<IEnumerable<DeviceDto>>>("devices");
+
+        devices = response.Result;
+    }
+
+}

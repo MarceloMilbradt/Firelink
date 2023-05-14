@@ -8,7 +8,7 @@ public class DeviceDto
 
     public string Name { get; set; }
 
-    public bool? Online { get; set; }
+    public bool Online { get; set; }
 
     public string ProductName { get; set; }
 }

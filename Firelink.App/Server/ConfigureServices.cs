@@ -30,16 +30,6 @@ public static class ConfigureServices
         services.AddLogging(loggingBuilder =>loggingBuilder.AddSerilog(Log.Logger, dispose: true));
         services.AddTransient<ITrackHubContext, TrackHubContext>();
 
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo()
-            {
-                Title = "Firelink API",
-                Version = "v1"
-            });
-        });
-
         services.AddHostedService<PlayerListener>();
         services.AddHostedService<TurnOnDeviceOnStartup>();
         return services;
