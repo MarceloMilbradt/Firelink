@@ -10,7 +10,7 @@ public class DeviceEndpoints : IEndpointDefinition
 {
     public void DefineEndpoints(WebApplication app)
     {
-        app.MapGet("devices", async (IMediator mediator) =>
+        app.MapGet("/devices", async (IMediator mediator) =>
         {
             var devices = await mediator.Send(GetUserDevicesQuery.Default);
             return TypedResults.Ok(new ResultResponse<IEnumerable<DeviceDto>>(devices, true));

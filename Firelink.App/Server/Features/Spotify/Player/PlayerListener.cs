@@ -9,9 +9,11 @@ namespace Firelink.App.Server.Features.Spotify.Player;
 
 public class PlayerListener : BackgroundService
 {
-    private PeriodicTimer _timerWhileListening = new(TimeSpan.FromMilliseconds(500));
+    private PeriodicTimer _timerWhileListening = new(TimeSpan.FromSeconds(1));
+    private PeriodicTimer _timerWhileListeningForAWhile = new(TimeSpan.FromSeconds(15));
     private PeriodicTimer _timerWhileWaiting = new(TimeSpan.FromSeconds(30));
     private PeriodicTimer? _timer;
+    private int _countNumberOfTimesSinceTrackChanged = 0;
 
     private readonly ILogger<PlayerListener> _logger;
     private readonly IPlayerListenerService _playerService;
@@ -76,6 +78,7 @@ public class PlayerListener : BackgroundService
     {
         if (_currentTrack?.Id != currentlyPlaying.Id)
         {
+            _countNumberOfTimesSinceTrackChanged = 0;
             _logger.LogInformation("Now listening to {track}", currentlyPlaying.Name);
             _currentTrack = currentlyPlaying;
             await _mediator.Publish(new TrackChangedNotification(_currentTrack), stoppingToken);
@@ -83,6 +86,14 @@ public class PlayerListener : BackgroundService
             {
                 _currentAlbumId = _currentTrack.Album.Id;
                 await _mediator.Publish(new ColorChangedNotification(_currentTrack.HsvColor), stoppingToken);
+            }
+        }
+        else
+        {
+            _countNumberOfTimesSinceTrackChanged++;
+            if (_countNumberOfTimesSinceTrackChanged > 10)
+            {
+                _timer = _timerWhileListeningForAWhile;
             }
         }
     }

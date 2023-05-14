@@ -1,31 +1,8 @@
-using Firelink.App.Server;
-using Firelink.Application;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.OpenApi.Models;
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorPages();
-builder.Services.AddEndpoints(typeof(IEndpointDefinition));
-builder.Services.AddSignalR();
-builder.Services.AddResponseCompression(options => 
-    options.MimeTypes = ResponseCompressionDefaults
-        .MimeTypes
-        .Concat(new[] {"application/octect-stream"})
-);
-
+builder.Services.AddApiServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo()
-    {
-        Title = "Firelink API",
-        Version = "v1"
-    });
-});
 
 var app = builder.Build();
 
@@ -54,7 +31,5 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapFallbackToFile("index.html");
 app.UseEndpoints();
-
-
 
 app.Run();
