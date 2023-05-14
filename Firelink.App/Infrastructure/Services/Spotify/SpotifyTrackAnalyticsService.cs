@@ -1,32 +1,37 @@
 ﻿using System.Drawing;
-using Firelink.App.Server.Features.Spotify.ColorScraping;
 using Firelink.App.Shared;
+using Firelink.Application.Common.Interfaces;
+using Firelink.Infrastructure.Common.Colors;
+using Firelink.Infrastructure.Common.Track;
 using LazyCache;
 using Microsoft.Extensions.Caching.Memory;
 using SpotifyAPI.Web;
 
-namespace Firelink.App.Server.Features.Spotify.Track;
+namespace Firelink.Infrastructure.Services.Spotify;
 
-public class SpotifyTrackAnalyticsService
+public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
 {
     private readonly IAppCache _cache;
-    private readonly SpotifyTrackService _trackService;
+    private readonly ISpotifyApi _spotifyApi;
 
-    public SpotifyTrackAnalyticsService(SpotifyTrackService trackService)
+    public SpotifyTrackAnalyticsService(ISpotifyApi spotifyApi)
     {
-        _trackService = trackService;
+        _spotifyApi = spotifyApi;
         _cache = new CachingService();
     }
 
-    public async Task<TrackDto> GetTrack()
+    public async Task<TrackDto?> GetTrackWithFeatures(CancellationToken cancellationToken)
     {
         try
         {
-            var track = await _trackService.GetTrack();
+            var track = await _spotifyApi.GetCurrentTrack(cancellationToken);
+            if (track == null)
+                return null;
+            
             return await _cache.GetOrAddAsync(track.Id, async entry =>
             {
-                var feturesTask = _trackService.GetFeatures(track);
-                var analysisTask = _trackService.GetAnalysis(track);
+                var feturesTask = GetFeatures(track.Id);
+                var analysisTask = GetAnalysis(track.Id);
                 var colorTask = ColorScraper.ScrapeColorForAlbum(track.Album.ExternalUrls["spotify"]);
 
                 await Task.WhenAll(feturesTask, analysisTask, colorTask);
@@ -41,17 +46,27 @@ public class SpotifyTrackAnalyticsService
         }
     }
 
+    private async Task<TrackAudioFeatures> GetFeatures(string trackId)
+    {
+        return await _spotifyApi.Client.Tracks.GetAudioFeatures(trackId);
+    }
+
+    private async Task<TrackAudioAnalysis> GetAnalysis(string trackId)
+    {
+        return await _spotifyApi.Client.Tracks.GetAudioAnalysis(trackId);
+    }
+
     private static TrackDto MapTrackDto(FullTrack track, Color color, Task<TrackAudioAnalysis> analysisTask)
     {
         return new TrackDto
         {
+            Id = track.Id,
             Name = track.Name,
             Color = color,
             RGBColor = $"{color.R},{color.G},{color.B}",
             Album = MapAlbumDto(track),
             Artists = MapArtitsDto(track),
             Levels = WaveForm.FromTrackAnalysis(analysisTask.Result),
-                    
         };
     }
 
@@ -59,6 +74,7 @@ public class SpotifyTrackAnalyticsService
     {
         return new AlbumDto
         {
+            Id = track.Album.Id,
             Name = track.Album.Name,
             Image = new ImageDto
             {

@@ -1,4 +1,4 @@
-﻿namespace Firelink.App.Server.Features.Spotify.ColorScraping;
+﻿namespace Firelink.Infrastructure.Common.Colors;
 
 public struct HSV
 {

@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
-namespace Firelink.App.Server.Features.Spotify.ColorScraping;
+namespace Firelink.Infrastructure.Common.Colors;
 
 public static class ColorScraper
 {

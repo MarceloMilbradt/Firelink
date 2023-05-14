@@ -1,5 +1,9 @@
 ﻿
 using Firelink.App.Shared;
+using Firelink.Application.Auth.Commands.AuthenticateUserCommand;
+using Firelink.Application.Auth.Queries.GetLoginUri;
+using Firelink.Application.Auth.Queries.GetUserLoginStatus;
+using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Firelink.App.Server.Features.Spotify.Auth;
@@ -13,25 +17,22 @@ public class AuthEndpoints : IEndpointDefinition
         app.MapGet("/auth", IsUserLoggedIn);
     }
 
-    private static async Task<Ok<ResultResponse<bool>>> IsUserLoggedIn(SpotifyAuthService authService)
+    private static async Task<Ok<ResultResponse<bool>>> IsUserLoggedIn(IMediator mediator)
     {
-        var isLoggedIn = await authService.IsLoggedIn();
+        var isLoggedIn = await mediator.Send(GetUserLoginStatusQuery.Default);
         return TypedResults.Ok(new ResultResponse<bool>(isLoggedIn, true));
     }
 
-    private static async Task<IResult> LoginWithToken(SpotifyAuthService authService, string code)
+    private static async Task<IResult> LoginWithToken(IMediator mediator, string code)
     {
-        await authService.LogIn(code);
+        await mediator.Send(new AuthenticateUserCommand(code));
         return Results.Redirect("/");
     }
 
-    private static IResult GotoLogin(SpotifyAuthService authService)
+    private static async Task<IResult> GotoLogin(IMediator mediator)
     {
-        return Results.Redirect(authService.GetLoginUri().ToString());
+        var uri = await mediator.Send(GetLoginUriQuery.Default);
+        return Results.Redirect(uri.ToString());
     }
-
-    public void DefineServices(IServiceCollection services)
-    {
-        services.AddTransient<SpotifyAuthService>();
-    }
+    
 }

@@ -4,6 +4,7 @@ namespace Firelink.App.Shared;
 
 public class TrackDto
 {
+    public string Id { get; set; }
     public string? Name { get; set; }
     public AlbumDto Album { get; set;}
     public ArtitsDto Artists { get; set;}

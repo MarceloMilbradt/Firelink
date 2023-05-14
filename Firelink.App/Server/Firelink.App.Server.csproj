@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
         <PackageReference Include="LazyCache" Version="2.4.0" />
+        <PackageReference Include="MediatR" Version="12.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.4" />
         <PackageReference Include="SpotifyAPI.Web" Version="7.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
@@ -17,12 +18,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Application\Application.csproj" />
         <ProjectReference Include="..\Client\Firelink.App.Client.csproj" />
         <ProjectReference Include="..\Shared\Firelink.App.Shared.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Features\Spotify\User\" />
     </ItemGroup>
 
 

@@ -1,6 +1,6 @@
 ﻿using SpotifyAPI.Web;
 
-namespace Firelink.App.Shared;
+namespace Firelink.Infrastructure.Common.Track;
 
 public class WaveForm
 {

@@ -2,7 +2,9 @@
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
 
-<div class="wrapper" style="background: radial-gradient(circle, rgba(0,0,0,0) 5%, rgba( @color ,0.5 ) 100%);">
+<div class="wrapper" style="
+background: linear-gradient(to top, rgba(@color, 0.5) 0%, rgba(@color, 0) 100%);
+">
     <div class="track">
         <TrackInfo Track="track"></TrackInfo>
         <Wave Color="@color" Levels="levels"></Wave>

@@ -1,19 +1,21 @@
 ﻿using Firelink.App.Shared;
+using Firelink.Application.Tracks.Queries.GetCurrentTrack;
+using MediatR;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Firelink.App.Server.Features.Spotify.Track;
 
 public class TrackHub : Hub
 {
-    private readonly SpotifyTrackAnalyticsService _trackAnalyticsService;
-    public TrackHub(SpotifyTrackAnalyticsService trackAnalyticsService)
+    private readonly IMediator _mediator;
+    public TrackHub(IMediator mediator)
     {
-        _trackAnalyticsService = trackAnalyticsService;
+        _mediator = mediator;
     }
 
     public override async Task OnConnectedAsync()
     {
-        await SendTrack(await _trackAnalyticsService.GetTrack());
+        await SendTrack(await _mediator.Send(GetCurrentTrackQuery.Default));
         await base.OnConnectedAsync();
     }
     public static async Task SendTrackTo(IClientProxy clients, TrackDto track)
