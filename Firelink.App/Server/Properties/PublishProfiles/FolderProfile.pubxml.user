@@ -4,6 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <History>False|2023-05-14T21:51:08.7540640Z;</History>
+    <History>True|2023-05-14T22:54:02.5700767Z;False|2023-05-14T19:51:28.1843142-03:00;False|2023-05-14T19:50:19.9126737-03:00;True|2023-05-14T19:45:08.1819007-03:00;True|2023-05-14T19:42:26.1901001-03:00;True|2023-05-14T19:38:56.1555165-03:00;False|2023-05-14T18:51:08.7540640-03:00;</History>
+    <_PublishTargetUrl>E:\CsharpProjs\Firelink\Firelink.App\Server\bin\Release\net7.0\publish\</_PublishTargetUrl>
+    <LastFailureDetails />
   </PropertyGroup>
 </Project>

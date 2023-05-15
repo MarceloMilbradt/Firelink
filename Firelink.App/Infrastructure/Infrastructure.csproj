@@ -6,9 +6,15 @@
         <Nullable>enable</Nullable>
         <AssemblyName>Firelink.Infrastructure</AssemblyName>
         <RootNamespace>Firelink.Infrastructure</RootNamespace>
+        <Company>Firelink.App</Company>
     </PropertyGroup>
 
-    <ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+
+
+	<ItemGroup>
       <ProjectReference Include="..\Application\Application.csproj" />
       <ProjectReference Include="..\Shared\Firelink.App.Shared.csproj" />
     </ItemGroup>
