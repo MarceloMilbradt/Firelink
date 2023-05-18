@@ -8,7 +8,7 @@
         <OutputType>WinExe</OutputType>   
         <PublishSingleFile>true</PublishSingleFile>
         <SelfContained>false</SelfContained>
-        <UseAppHost>true</UseAppHost>
+<!--        <UseAppHost>true</UseAppHost>-->
         <ApplicationIcon>favicon.ico</ApplicationIcon>
     </PropertyGroup>
 

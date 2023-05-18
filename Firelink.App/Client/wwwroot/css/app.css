@@ -10,12 +10,7 @@ body {
     min-height: 100vh;
     max-height: 100vh;
 }
-footer {
-    margin-top: auto;
-    color: white;
-    max-height: 4rem;
-    padding: 10px 0;
-}
+
 h1:focus {
     outline: none;
 }

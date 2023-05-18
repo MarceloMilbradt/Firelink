@@ -2,22 +2,20 @@
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
 
-<div class="wrapper" style="
-background: linear-gradient(to top, rgba(@color, 0.5) 0%, rgba(@color, 0) 100%);
-">
-    <div class="track">
+
+<MudContainer Fixed="true" Style="@style" >
+    <MudStack Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center" Style="height: 100%">
         <TrackInfo Track="track"></TrackInfo>
         <Wave Color="@color" Levels="levels"></Wave>
-        <div></div>
-    </div>
-</div>
+    </MudStack>
+</MudContainer>
 
 @code {
     private TrackDto? track;
     private string color;
     private HubConnection? hubConnection;
     private IEnumerable<double>? levels = new List<double>();
-    private string bgcolor;
+    private string style;
 
     private async Task Connect()
     {
@@ -33,7 +31,7 @@ background: linear-gradient(to top, rgba(@color, 0.5) 0%, rgba(@color, 0) 100%);
         track = newTrack;
         color = newTrack.RGBColor;
         levels = newTrack.Levels;
-        bgcolor = $"";
+        style = $"background: linear-gradient(to top, rgba({color}, 0.5) 0%, rgba({color}, 0) 100%);";
         StateHasChanged();
     }
 

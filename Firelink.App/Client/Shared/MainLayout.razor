@@ -1,10 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
-        @* <MenuBar/> *@
-    </main>
-</div>
+<MudThemeProvider IsDarkMode="true" />
+<MudDialogProvider/>
+
+<MudLayout >
+    <MudDrawer  Open="false">
+
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
