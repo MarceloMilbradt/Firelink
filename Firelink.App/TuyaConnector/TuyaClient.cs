@@ -78,7 +78,7 @@ namespace TuyaConnector
         {
             logger?.LogInformation("Performing authenticated request: {httpMethod} {path}", httpMethod, path);
 
-            if (tuyaAccessToken == null)
+            if (tuyaAccessToken == null || tuyaAccessToken.IsExpired())
             {
                 logger?.LogInformation("Access token is missing. Obtaining access token for ");
                 tuyaAccessToken = await GetAccessTokenInfoAsync(ct: cancellationToken);

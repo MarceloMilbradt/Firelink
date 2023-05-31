@@ -7,6 +7,11 @@ namespace TuyaConnector.Data
     /// </summary>
     public class AccessTokenInfo : IAccessToken, IIdentifiable
     {
+        public AccessTokenInfo()
+        {
+            _issuedAt = DateTime.UtcNow;
+        }
+        private readonly DateTime _issuedAt;
         /// <summary>
         /// Gets or sets the token string.
         /// </summary>
@@ -30,5 +35,12 @@ namespace TuyaConnector.Data
         /// </summary>
         [JsonProperty("uid", NullValueHandling = NullValueHandling.Ignore)]
         public string? Id { get; set; }
+
+        public bool IsExpired()
+        {
+            return _issuedAt.AddHours(1) >= DateTime.UtcNow;
+        }
+
+
     }
 }

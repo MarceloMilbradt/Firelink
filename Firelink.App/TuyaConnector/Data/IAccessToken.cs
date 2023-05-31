@@ -11,5 +11,6 @@
         /// Gets or sets the expiration time.
         /// </summary>
         public long? ExpireTime { get; set; }
+        public bool IsExpired();
     }
 }
