@@ -10,7 +10,7 @@ namespace Firelink.App.Server.Features.Spotify.Player;
 public class PlayerListener : BackgroundService
 {
     private PeriodicTimer _timerWhileListening = new(TimeSpan.FromSeconds(1));
-    private PeriodicTimer _timerWhileListeningForAWhile = new(TimeSpan.FromSeconds(15));
+    private PeriodicTimer _timerWhileListeningForAWhile = new(TimeSpan.FromSeconds(5));
     private PeriodicTimer _timerWhileWaiting = new(TimeSpan.FromSeconds(30));
     private PeriodicTimer? _timer;
     private int _countNumberOfTimesSinceTrackChanged = 0;

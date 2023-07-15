@@ -49,4 +49,39 @@ public class TuyaConnectorService : ITuyaConnector
     {
         await _tuyaClient.DeviceManager.SendCommandAsync(deviceId, command, cancellationToken);
     }
+    
+    public async Task SendCommandToAllDevices(Command command, CancellationToken cancellationToken)
+    {
+        var devices = await GetUserDevices(cancellationToken);
+        var deviceTasks = devices
+            .Select(device => SendCommandToDevice(device.Id!, command, cancellationToken)).ToList();
+        await Task.WhenAll(deviceTasks);
+    }
+    public async Task SendCommandToAllDevices(Command command, WorkMode mode, CancellationToken cancellationToken)
+    {
+        var devices = await GetUserDevices(cancellationToken);
+        var deviceTasks = devices
+            .Select(device => SendCommandToDevice(device.Id!, command, mode, cancellationToken)).ToList();
+        await Task.WhenAll(deviceTasks);
+    }
+    public async Task SendCommandToDevice(string deviceId, Command command, WorkMode mode, CancellationToken cancellationToken)
+    {
+        var modeCode = mode switch
+        {
+            WorkMode.Color => LedWorkModes.Color,
+            WorkMode.Scene => LedWorkModes.Scene,
+            _ => throw new NotImplementedException(),
+        };
+
+        var setDeviceModeCommand = new Command
+        {
+            Code = LedCommands.Mode,
+            Value = modeCode,
+        };
+
+        await _tuyaClient.DeviceManager.SendCommandAsync(deviceId, setDeviceModeCommand, cancellationToken);
+        await _tuyaClient.DeviceManager.SendCommandAsync(deviceId, command, cancellationToken);
+    }
+
+
 }
