@@ -1,8 +1,9 @@
 ﻿using System.Drawing;
+using Newtonsoft.Json;
 
 namespace Firelink.App.Shared;
 
-public record struct Hsv
+public record  Hsv
 {
     public int H;
     public int S;

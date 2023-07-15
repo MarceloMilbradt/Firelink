@@ -12,4 +12,7 @@ public class TrackDto
     public string RGBColor { get; set; }
     public Hsv HsvColor { get; set; }
     public Color Color { get; set; }
+    public float Tempo { get; set; }
+    public float Energy { get; set; }
+    public float Duration { get; set; }
 }

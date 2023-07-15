@@ -1,5 +1,6 @@
 ﻿using Firelink.Application.Common.Interfaces;
 using MediatR;
+using SpotifyAPI.Web;
 using TuyaConnector.Data;
 
 namespace Firelink.Application.Tracks.Events.ColorChanged;
@@ -15,16 +16,15 @@ internal sealed class ColorChangedNotificationHandler : INotificationHandler<Col
 
     public async Task Handle(ColorChangedNotification notification, CancellationToken cancellationToken)
     {
+        return;
         var color = notification.NewColor;
         var devices = await _tuyaConnector.GetUserDevices(cancellationToken);
         var command = new Command
         {
-            Code = "colour_data",
+            Code = LedCommands.Color,
             Value = color,
         };
 
-        var deviceTasks = devices
-            .Select(device => _tuyaConnector.SendCommandToDevice(device.Id!, command, cancellationToken)).ToList();
-        await Task.WhenAll(deviceTasks);
+        await _tuyaConnector.SendCommandToAllDevices(command, WorkMode.Color, cancellationToken);
     }
 }
