@@ -89,7 +89,8 @@ public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
     {
         return new ArtitsDto
         {
-            Name = track.Artists.First().Name
+            Name = track.Artists.First().Name,
+           
         };
     }
 }

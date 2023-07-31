@@ -1,14 +1,16 @@
 ﻿@using System.Net.Mime
 @if (Track != null)
 {
-    <div>
+    <div class="@Class text-white">
         <h2>@Track.Name</h2>
         <p>@Track.Album?.Name @Track.Album?.ReleaseDate - @Track.Artists?.Name</p>
-        <img src="@Track.Album?.Image.Url" style="max-width: 75%; max-height: 75%;"/>
+        <img src="@Track.Album?.Image.Url" style="max-width: 65%; max-height: 65%;" class=" p-0 mx-auto d-block shadow-lg" />
     </div>
 }
 
 @code {
     [Parameter]
     public TrackDto? Track { get; set; }
+    [Parameter]
+    public string Class{ get; set; }
 }
