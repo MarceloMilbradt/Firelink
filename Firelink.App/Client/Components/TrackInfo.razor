@@ -1,7 +1,7 @@
 ﻿@using System.Net.Mime
 @if (Track != null)
 {
-    <div class="@Class text-white">
+    <div class="@Class text-light">
         <h2>@Track.Name</h2>
         <p>@Track.Album?.Name @Track.Album?.ReleaseDate - @Track.Artists?.Name</p>
         <img src="@Track.Album?.Image.Url" style="max-width: 65%; max-height: 65%;" class=" p-0 mx-auto d-block shadow-lg" />

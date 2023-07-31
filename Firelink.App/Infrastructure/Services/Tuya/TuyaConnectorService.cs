@@ -49,4 +49,10 @@ public class TuyaConnectorService : ITuyaConnector
     {
         await _tuyaClient.DeviceManager.SendCommandAsync(deviceId, command, cancellationToken);
     }
+    public async Task<Device> SendUpdateCommandToDevice(string deviceId, Command command, CancellationToken cancellationToken)
+    {
+        await SendCommandToDevice(deviceId, command, cancellationToken);
+        _cache.Remove($"deviceId-{deviceId}");
+        return await GetDevice(deviceId, cancellationToken);
+    }
 }

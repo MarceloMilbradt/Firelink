@@ -28,7 +28,8 @@ internal sealed class GetUserDevicesQueryHandler : IRequestHandler<GetUserDevice
                 Id = device.Id,
                 ProductName = device.ProductName,
                 Name = device.Name,
-                Online = Convert.ToBoolean(device.IsOnline)
+                Online = Convert.ToBoolean(device.IsOnline),
+                Power = Convert.ToBoolean(device.StatusList.FirstOrDefault(s => s.Code == "switch_led").Value)
             });
     }
 }

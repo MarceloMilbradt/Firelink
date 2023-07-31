@@ -4,11 +4,20 @@
 
 
 <div class="wrapper text-center" style="@style">
-    <div class="track container col-md-6 shadow p-5 bg-dark" style="@styleWithColor">
-        <TrackInfo Track="track" Class="justify-content-md-center row gy-1 my-3"></TrackInfo>
-        <Wave Color="@color" Levels="levels" Class="row my-3"></Wave>
+    <div class="track container col-md-6 shadow-lg py-2 px-4 bg-dark" style="@styleWithColor">
+        <SideMenu></SideMenu>
+        @if (track != null)
+        {
+            <TrackInfo Track="track" Class="justify-content-md-center row gy-1 my-3"></TrackInfo>
+            <Wave Color="@color" Levels="levels" Class="row my-3"></Wave>
+        }
+        else
+        {
+            <h2 class="row my-3 text-light text-center">No Track Playing</h2>
+        }
     </div>
 </div>
+
 
 @code {
     private TrackDto? track;

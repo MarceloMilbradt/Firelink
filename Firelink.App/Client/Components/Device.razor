@@ -1,0 +1,38 @@
+﻿@inject HttpClient Http
+
+<div class="row">
+    <div class="col-8">
+        <span class="align-middle">@Item.ProductName - @Item.Name</span>
+        <span class="align-middle @(Item.Power ? "text-success" : "text-danger")">●</span>
+        <span class="align-middle">
+            @if (Item.Online)
+            {
+                <i class="bi bi-wifi text-success"></i>
+            }
+            else
+            {
+                <i class="bi bi-wifi-off text-danger"></i>
+            }
+        </span>
+    </div>
+    <div class="col-3 text-center">
+        <button type="button" @onclick="ToggleDevicePower" class=" btn btn-secondary float-end @(Item.Power ? "btn-danger" : "btn-success")">
+            <i class="bi bi-power"></i>
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public DeviceDto Item { get; set; }
+
+    private async Task ToggleDevicePower()
+    {
+        var response = await Http.PatchAsJsonAsync($"device/{Item.Id}", new { power = !Item.Power });
+        var deviceResponse = await response.Content.ReadFromJsonAsync<ResultResponse<DeviceDto>>();
+        if (deviceResponse.Success)
+        {
+            Item = deviceResponse.Result;
+        }
+    }
+}
