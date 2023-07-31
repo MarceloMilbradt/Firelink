@@ -8,4 +8,7 @@ public interface ITuyaConnector
     public Task<Device> GetDevice(string deviceId, CancellationToken cancellationToken);
     public Task SendCommandToDevice(string deviceId, Command command,CancellationToken cancellationToken);
     Task<Device> SendUpdateCommandToDevice(string deviceId, Command command, CancellationToken cancellationToken);
+    Task SendCommandToDevice(string deviceId, Command command, WorkMode mode, CancellationToken cancellationToken);
+    Task SendCommandToAllDevices(Command command, WorkMode mode, CancellationToken cancellationToken);
+    Task SendCommandToAllDevices(Command command, CancellationToken cancellationToken);
 }

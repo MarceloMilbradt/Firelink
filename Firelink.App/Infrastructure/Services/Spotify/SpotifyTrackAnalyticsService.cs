@@ -36,7 +36,7 @@ public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
 
                 await Task.WhenAll(feturesTask, analysisTask, colorTask);
                 var color = colorTask.Result;
-                var trackDto = MapTrackDto(track, color, analysisTask);
+                var trackDto = MapTrackDto(track, color, analysisTask.Result, feturesTask.Result);
                 return trackDto;
             }, new MemoryCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10) });
         }
@@ -56,7 +56,7 @@ public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
         return await _spotifyApi.Client.Tracks.GetAudioAnalysis(trackId);
     }
 
-    private static TrackDto MapTrackDto(FullTrack track, Color color, Task<TrackAudioAnalysis> analysisTask)
+    private static TrackDto MapTrackDto(FullTrack track, Color color, TrackAudioAnalysis analysis, TrackAudioFeatures features)
     {
         return new TrackDto
         {
@@ -67,7 +67,10 @@ public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
             HsvColor = Hsv.ConvertToHSV(color),
             Album = MapAlbumDto(track),
             Artists = MapArtitsDto(track),
-            Levels = WaveForm.FromTrackAnalysis(analysisTask.Result),
+            Levels = WaveForm.FromTrackAnalysis(analysis),
+            Tempo = features.Tempo,
+            Duration = features.DurationMs,
+            Energy = features.Energy
         };
     }
 
