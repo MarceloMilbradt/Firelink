@@ -76,7 +76,7 @@ public class PlayerListener : BackgroundService
 
     private async Task HandleWhenTrackIsPlaying(TrackDto currentlyPlaying, CancellationToken stoppingToken)
     {
-        if (_currentTrack?.Id != currentlyPlaying.Id)
+        if (_currentTrack?.Id != currentlyPlaying.Id || _currentTrack is null)
         {
             _countNumberOfTimesSinceTrackChanged = 0;
             _logger.LogInformation("Now listening to {Track}", currentlyPlaying.Name);
