@@ -60,7 +60,7 @@ public class PlayerListener : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while listening: {track} {albumId}", _currentTrack, _currentAlbumId);
+                _logger.LogError(ex, "Error while listening: {@Track} {AlbumId}, {Exception}", _currentTrack, _currentAlbumId, ex.Message);
             }
         }
     }
@@ -69,17 +69,17 @@ public class PlayerListener : BackgroundService
     {
         if (_currentAlbumId != string.Empty)
         {
-            _logger.LogInformation("Now listening to {track}", "Nothing");
+            _logger.LogInformation("Now listening to {Track}", "Nothing");
             _currentAlbumId = string.Empty;
         }
     }
 
     private async Task HandleWhenTrackIsPlaying(TrackDto currentlyPlaying, CancellationToken stoppingToken)
     {
-        if (_currentTrack?.Id != currentlyPlaying.Id)
+        if (_currentTrack?.Id != currentlyPlaying.Id || _currentTrack is null)
         {
             _countNumberOfTimesSinceTrackChanged = 0;
-            _logger.LogInformation("Now listening to {track}", currentlyPlaying.Name);
+            _logger.LogInformation("Now listening to {Track}", currentlyPlaying.Name);
             _currentTrack = currentlyPlaying;
             await _mediator.Publish(new TrackChangedNotification(_currentTrack), stoppingToken);
             if (_currentTrack.Album.Id != _currentAlbumId)

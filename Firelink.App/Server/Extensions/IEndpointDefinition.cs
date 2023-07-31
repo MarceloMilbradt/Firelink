@@ -1,4 +1,4 @@
-﻿namespace Firelink.App.Server;
+﻿namespace Firelink.App.Server.Extensions;
 
 public interface IEndpointDefinition
 {

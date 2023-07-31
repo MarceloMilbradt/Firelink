@@ -1,19 +1,6 @@
-﻿.track {
-    display: grid;
-    justify-content: space-around;
-    align-items: center;
-    max-width: 40%;
-    margin: auto;
-    text-align: center;
-    grid-gap: 4rem;
-    grid-template-rows: 85% 15%;
-}
-.wrapper {
-    margin-top: -1.1rem;
-    margin-left: -2rem;
-    margin-right: -1.5rem;
+﻿.wrapper {
     padding: 2rem;
-    height: calc(100vh - 4rem);
+    height: 100vh;
 }
 
 .track-bg {

@@ -5,21 +5,19 @@
 {
     @foreach (var device in devices)
     {
-        <div>
-            <span>@device.ProductName - @device.Name</span>
-            <span style="color: @(device.Online ? "green" : "red");">●</span>
-        </div>
+        <Device Item="device"></Device>
     }
 }
 
 @code {
     private IEnumerable<DeviceDto> devices;
 
-    protected override async Task OnInitializedAsync()
+    public async Task Load()
     {
         var response = await Http.GetFromJsonAsync<ResultResponse<IEnumerable<DeviceDto>>>("devices");
 
         devices = response.Result;
+        StateHasChanged();
     }
 
 }

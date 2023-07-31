@@ -18,5 +18,6 @@ namespace TuyaConnector.Data
         /// </summary>
         [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
         public object? Value { get; set; }
+
     }
 }

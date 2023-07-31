@@ -9,11 +9,7 @@
         /// Gets or sets the error code.
         /// </summary>
         public string Code { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets the error message.
-        /// </summary>
-        public override string Message { get; } = string.Empty;
+        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TuyaResponseException"/> class.

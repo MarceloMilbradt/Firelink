@@ -1,4 +1,4 @@
-﻿using Firelink.App.Server;
+﻿using Firelink.App.Server.Extensions;
 using Firelink.App.Server.Features.Devices;
 using Firelink.App.Server.Features.Spotify.Player;
 using Firelink.App.Server.Features.Spotify.Track;
@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Firelink.App.Server;
 
 public static class ConfigureServices
 {
-    
+
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         services.AddRazorPages();
@@ -22,12 +22,13 @@ public static class ConfigureServices
                 .MimeTypes
                 .Concat(new[] { "application/octect-stream" })
         );
-        
+
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
+            .WriteTo.File("logs/log-.log", rollingInterval: RollingInterval.Day)
             .CreateLogger();
-        
-        services.AddLogging(loggingBuilder =>loggingBuilder.AddSerilog(Log.Logger, dispose: true));
+
+        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(Log.Logger, dispose: true));
         services.AddTransient<ITrackHubContext, TrackHubContext>();
 
         services.AddHostedService<PlayerListener>();

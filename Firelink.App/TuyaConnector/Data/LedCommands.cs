@@ -11,6 +11,7 @@ public static class LedCommands
     public const string Scene = "scene_data";
     public const string Color = "colour_data";
     public const string Mode = "work_mode";
+    public const string Power = "switch_led";
 }
 public static class LedWorkModes
 {

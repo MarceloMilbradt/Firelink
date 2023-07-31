@@ -1,6 +1,4 @@
-﻿using Firelink.App.Server;
-
-namespace Microsoft.Extensions.DependencyInjection;
+﻿namespace Firelink.App.Server.Extensions;
 
 public static class EndpointDefinitionsExtensions
 {

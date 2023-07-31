@@ -1,4 +1,4 @@
-﻿using Firelink.Application.Devices.Commands.TurnOnAllDevices;
+﻿using Firelink.Application.Devices.Commands.ToggleAllDevices;
 using MediatR;
 
 namespace Firelink.App.Server.Features.Devices;
@@ -14,6 +14,6 @@ public class TurnOnDeviceOnStartup : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await _mediator.Send(TurnOnAllDevicesCommand.Default, stoppingToken);
+        await _mediator.Send(ToggleAllDevicesCommand.Default, stoppingToken);
     }
 }

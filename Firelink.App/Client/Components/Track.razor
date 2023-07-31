@@ -2,22 +2,30 @@
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
 
-<div class="wrapper" style="
-background: linear-gradient(to top, rgba(@color, 0.5) 0%, rgba(@color, 0) 100%);
-">
-    <div class="track">
-        <TrackInfo Track="track"></TrackInfo>
-        <Wave Color="@color" Levels="levels"></Wave>
-        <div></div>
+
+<div class="wrapper text-center" style="@style">
+    <div class="track container col-md-6 shadow-lg py-2 px-4 bg-dark" style="@styleWithColor">
+        <SideMenu></SideMenu>
+        @if (track != null)
+        {
+            <TrackInfo Track="track" Class="justify-content-md-center row gy-1 my-3"></TrackInfo>
+            <Wave Color="@color" Levels="levels" Class="row my-3"></Wave>
+        }
+        else
+        {
+            <h2 class="row my-3 text-light text-center">No Track Playing</h2>
+        }
     </div>
 </div>
+
 
 @code {
     private TrackDto? track;
     private string color;
     private HubConnection? hubConnection;
     private IEnumerable<double>? levels = new List<double>();
-    private string bgcolor;
+    private string style;
+    private string styleWithColor;
 
     private async Task Connect()
     {
@@ -33,7 +41,8 @@ background: linear-gradient(to top, rgba(@color, 0.5) 0%, rgba(@color, 0) 100%);
         track = newTrack;
         color = newTrack.RGBColor;
         levels = newTrack.Levels;
-        bgcolor = $"";
+        styleWithColor = $"background: linear-gradient(to top, rgba({color}, 0.5) 0%, rgba({color}, 0) 100%);";
+        style = $"background-image:url('{newTrack.Album.Image.Url}');   background-repeat: no-repeat;   background-position: center;   background-size: cover;";
         StateHasChanged();
     }
 

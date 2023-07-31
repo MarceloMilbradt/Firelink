@@ -1,0 +1,25 @@
+﻿<div class="@Class">
+    <a class="float-end text-decoration-none text-light" data-bs-toggle="offcanvas" href="#offcanvasRight" role="button" aria-controls="offcanvasRight" @onclick="LoadDevices">
+        <i class="bi bi-three-dots-vertical"></i>
+    </a>
+</div>
+
+<div class="offcanvas offcanvas-end bg-dark text-light" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel">Devices</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <Devices @ref="devices"></Devices>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Class { get; set; }
+    private Devices devices;
+    private async Task LoadDevices()
+    {
+        await devices.Load();
+    }
+}

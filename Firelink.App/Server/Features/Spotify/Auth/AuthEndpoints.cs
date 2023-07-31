@@ -1,4 +1,5 @@
 ﻿
+using Firelink.App.Server.Extensions;
 using Firelink.App.Shared;
 using Firelink.Application.Auth.Commands.AuthenticateUserCommand;
 using Firelink.Application.Auth.Queries.GetLoginUri;
