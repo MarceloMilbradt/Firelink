@@ -13,7 +13,7 @@ public static class ConfigureServices
         services.AddTransient<IDateTime, DateTimeProvider>();
         services.AddTransient<IPlayerListenerService, PlayerListenerService>();
         services.AddTransient<ISpotifyTrackAnalyticsService, SpotifyTrackAnalyticsService>();
-        services.AddScoped<ITuyaConnector,TuyaConnectorService>();
+        services.AddSingleton<ITuyaConnector,TuyaConnectorService>();
         services.AddLazyCache();
         return services;
     }
