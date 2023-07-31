@@ -22,7 +22,7 @@ internal sealed class ToggleDeviceCommandHandler : IRequestHandler<ToggleDeviceC
     {
         var command = new Command
         {
-            Code = "switch_led",
+            Code = LedCommands.Power,
             Value = request.Power,
         };
 

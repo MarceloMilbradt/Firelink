@@ -23,7 +23,7 @@ internal sealed class ToggleAllDevicesCommandHandler : IRequestHandler<ToggleAll
         var devices = await _tuyaConnector.GetUserDevices(cancellationToken);
         var command = new Command
         {
-            Code = "switch_led",
+            Code = LedCommands.Power,
             Value = request.Power,
         };
 

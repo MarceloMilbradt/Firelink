@@ -55,7 +55,6 @@ public class TuyaConnectorService : ITuyaConnector
         _cache.Remove($"deviceId-{deviceId}");
         return await GetDevice(deviceId, cancellationToken);
     }
-}
     
     public async Task SendCommandToAllDevices(Command command, CancellationToken cancellationToken)
     {
