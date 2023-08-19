@@ -16,13 +16,21 @@ public sealed record CreateRainbowEffectCommand : IRequest<bool>;
 internal sealed class CreateRainbowEffectCommandHandler : IRequestHandler<CreateRainbowEffectCommand, bool>
 {
     private readonly ITuyaConnector _tuyaConnector;
+    private readonly IPlayerListenerService _playerListenerService;
 
-    public CreateRainbowEffectCommandHandler(ITuyaConnector tuyaConnector)
+    public CreateRainbowEffectCommandHandler(ITuyaConnector tuyaConnector, IPlayerListenerService playerListenerService)
     {
         _tuyaConnector = tuyaConnector;
+        _playerListenerService = playerListenerService;
     }
     public async Task<bool> Handle(CreateRainbowEffectCommand request, CancellationToken cancellationToken)
     {
+        _playerListenerService.ToggleListen();
+        if (_playerListenerService.ShouldListen())
+        {
+            return false;
+        }
+
         var devices = await _tuyaConnector.GetUserDevices(cancellationToken);
         var scene = new Scene
         {
@@ -43,7 +51,6 @@ internal sealed class CreateRainbowEffectCommandHandler : IRequestHandler<Create
             Code = LedCommands.Scene,
             Value = scene,
         };
-
 
         var deviceTasks = devices.Select(device => _tuyaConnector.SendUpdateCommandToDevice(device.Id, new Command { Code = LedCommands.Scene, Value = scene }, cancellationToken)).ToList();
         await Task.WhenAll(deviceTasks);
