@@ -18,7 +18,7 @@ public class AuthEndpoints : IEndpointDefinition
         app.MapGet("/auth", IsUserLoggedIn);
     }
 
-    private static async Task<Ok<ResultResponse<bool>>> IsUserLoggedIn(IMediator mediator)
+    private static async Task<Results<Ok<ResultResponse<bool>>, BadRequest>> IsUserLoggedIn(IMediator mediator)
     {
         var isLoggedIn = await mediator.Send(GetUserLoginStatusQuery.Default);
         return TypedResults.Ok(new ResultResponse<bool>(isLoggedIn, true));

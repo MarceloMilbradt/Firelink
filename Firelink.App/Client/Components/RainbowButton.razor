@@ -1,0 +1,17 @@
+﻿@inject HttpClient Http
+
+<div class="@Class">
+    <a class="float-end text-decoration-none text-light mx-2" role="button" title="Rainbow Effect" @onclick="SetRainbow">
+        <i class="bi bi-magic"></i>
+    </a>
+</div>
+
+@code {
+    [Parameter]
+    public string Class { get; set; }
+
+    public async Task SetRainbow()
+    {
+        await Http.PostAsync("/devices/rainbow", null);
+    }
+}

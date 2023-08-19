@@ -16,6 +16,15 @@ public record SceneUnit : Hsv
     [JsonProperty("unit_switch_duration")]
     public int UnitSwitchDuration { get; set; }
     public SceneUnit() { }
+    public SceneUnit(int h, int s, int v, string unitChangeMode, int unitGradientDuration, int unitSwitchDuration)
+    {
+        H = h;
+        S = s;
+        V = v;
+        UnitChangeMode = unitChangeMode;
+        UnitGradientDuration = unitGradientDuration;
+        UnitSwitchDuration = unitSwitchDuration;
+    }
     public SceneUnit(string changeMode, int duration, Hsv hsv)
     {
         H = hsv.H;

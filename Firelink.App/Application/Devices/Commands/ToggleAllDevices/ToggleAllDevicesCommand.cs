@@ -1,4 +1,5 @@
-﻿using Firelink.Application.Common.Interfaces;
+﻿using Firelink.App.Shared;
+using Firelink.Application.Common.Interfaces;
 using MediatR;
 using TuyaConnector.Data;
 
