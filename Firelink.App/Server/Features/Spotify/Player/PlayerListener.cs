@@ -41,6 +41,8 @@ public class PlayerListener : BackgroundService
             {
                 if (!_spotifyApi.IsUserLoggedIn() || !_playerService.ShouldListen())
                 {
+                    _logger.LogInformation("Waiting, {logIn} {listening}", _spotifyApi.IsUserLoggedIn(), _playerService.ShouldListen());
+                    _currentAlbumId = string.Empty;
                     _timer = _timerWhileWaiting;
                     continue;
                 }
