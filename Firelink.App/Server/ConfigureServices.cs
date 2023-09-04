@@ -25,7 +25,7 @@ public static class ConfigureServices
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
-            .WriteTo.File("logs/log-.log", rollingInterval: RollingInterval.Day)
+            .WriteTo.File("logs/log-.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 2)
             .CreateLogger();
 
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(Log.Logger, dispose: true));
