@@ -16,19 +16,16 @@ public class PlayerListener : BackgroundService
     private int _countNumberOfTimesSinceTrackChanged = 0;
 
     private readonly ILogger<PlayerListener> _logger;
-    private readonly IPlayerListenerService _playerService;
     private readonly ISpotifyApi _spotifyApi;
     private readonly IMediator _mediator;
     private string _currentAlbumId = string.Empty;
     private TrackDto _currentTrack;
 
     public PlayerListener(ILogger<PlayerListener> logger,
-        IMediator mediator,
-        IPlayerListenerService playerService, ISpotifyApi spotifyApi)
+        IMediator mediator, ISpotifyApi spotifyApi)
     {
         _logger = logger;
         _mediator = mediator;
-        _playerService = playerService;
         _spotifyApi = spotifyApi;
         _timer = _timerWhileListening;
     }
@@ -84,7 +81,7 @@ public class PlayerListener : BackgroundService
             _logger.LogInformation("Now listening to {Track}", currentlyPlaying.Name);
             _currentTrack = currentlyPlaying;
             await _mediator.Publish(new TrackChangedNotification(_currentTrack), stoppingToken);
-            if (_currentTrack.Album.Id != _currentAlbumId && _playerService.ShouldListen())
+            if (_currentTrack.Album.Id != _currentAlbumId)
             {
                 _currentAlbumId = _currentTrack.Album.Id;
                 await _mediator.Publish(new ColorChangedNotification(_currentTrack.HsvColor), stoppingToken);

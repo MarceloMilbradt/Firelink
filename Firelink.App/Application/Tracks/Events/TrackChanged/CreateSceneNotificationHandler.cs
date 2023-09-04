@@ -9,16 +9,20 @@ internal sealed class CreateSceneNotificationHandler : INotificationHandler<Trac
 {
     private readonly ISpotifyTrackAnalyticsService _trackAnalyticsService;
     private readonly ITuyaConnector _tuyaConnector;
-
+    private readonly IPlayerListenerService _playerListenerService;
     public CreateSceneNotificationHandler(ISpotifyTrackAnalyticsService trackAnalyticsService,
-        ITuyaConnector tuyaConnector)
+        ITuyaConnector tuyaConnector,
+        IPlayerListenerService playerListenerService)
     {
         _trackAnalyticsService = trackAnalyticsService;
         _tuyaConnector = tuyaConnector;
+        _playerListenerService = playerListenerService;
     }
 
     public async Task Handle(TrackChangedNotification notification, CancellationToken cancellationToken)
     {
+        if (!_playerListenerService.ShouldListen()) return;
+
         var track = await _trackAnalyticsService.GetTrackWithFeatures(cancellationToken);
         var energy = track.Energy;
 
