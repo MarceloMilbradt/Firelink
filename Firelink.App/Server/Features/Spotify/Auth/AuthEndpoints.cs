@@ -13,9 +13,10 @@ public class AuthEndpoints : IEndpointDefinition
 {
     public void DefineEndpoints(WebApplication app)
     {
+        var endpointGroup = app.MapGroup("auth");
         app.MapGet("/login", GotoLogin);
-        app.MapGet("/auth/token", LoginWithToken);
-        app.MapGet("/auth", IsUserLoggedIn);
+        endpointGroup.MapGet("/token", LoginWithToken);
+        endpointGroup.MapGet("", IsUserLoggedIn);
     }
 
     private static async Task<Results<Ok<ResultResponse<bool>>, BadRequest>> IsUserLoggedIn(IMediator mediator)

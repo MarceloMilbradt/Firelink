@@ -22,7 +22,7 @@ internal class SetColorOnAllDevicesCommandHandler : IRequestHandler<SetColorOnAl
         var devices = await _tuyaConnector.GetUserDevices(cancellationToken);
         var command = new Command
         {
-            Code = "colour_data",
+            Code = LedCommands.Color,
             Value = request.Color,
         };
         

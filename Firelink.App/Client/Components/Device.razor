@@ -28,7 +28,7 @@
 
     private async Task ToggleDevicePower()
     {
-        var response = await Http.PatchAsJsonAsync($"device/{Item.Id}", new { power = !Item.Power });
+        var response = await Http.PatchAsJsonAsync($"devices/{Item.Id}", new { power = !Item.Power });
         var deviceResponse = await response.Content.ReadFromJsonAsync<ResultResponse<DeviceDto>>();
         if (deviceResponse.Success)
         {

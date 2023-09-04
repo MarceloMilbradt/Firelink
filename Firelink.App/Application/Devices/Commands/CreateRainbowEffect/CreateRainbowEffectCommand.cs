@@ -25,11 +25,7 @@ internal sealed class CreateRainbowEffectCommandHandler : IRequestHandler<Create
     }
     public async Task<bool> Handle(CreateRainbowEffectCommand request, CancellationToken cancellationToken)
     {
-        _playerListenerService.ToggleListen();
-        if (_playerListenerService.ShouldListen())
-        {
-            return false;
-        }
+        _playerListenerService.SetListen(false);
 
         var devices = await _tuyaConnector.GetUserDevices(cancellationToken);
         var scene = new Scene

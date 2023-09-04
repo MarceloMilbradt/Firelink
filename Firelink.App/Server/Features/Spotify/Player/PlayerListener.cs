@@ -9,9 +9,9 @@ namespace Firelink.App.Server.Features.Spotify.Player;
 
 public class PlayerListener : BackgroundService
 {
-    private PeriodicTimer _timerWhileListening = new(TimeSpan.FromSeconds(1));
-    private PeriodicTimer _timerWhileListeningForAWhile = new(TimeSpan.FromSeconds(5));
-    private PeriodicTimer _timerWhileWaiting = new(TimeSpan.FromSeconds(30));
+    private readonly PeriodicTimer _timerWhileListening = new(TimeSpan.FromSeconds(1));
+    private readonly PeriodicTimer _timerWhileListeningForAWhile = new(TimeSpan.FromSeconds(5));
+    private readonly PeriodicTimer _timerWhileWaiting = new(TimeSpan.FromSeconds(30));
     private PeriodicTimer? _timer;
     private int _countNumberOfTimesSinceTrackChanged = 0;
 
@@ -35,24 +35,24 @@ public class PlayerListener : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (await _timer.WaitForNextTickAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
+        while (await _timer.WaitForNextTickAsync(stoppingToken))
         {
             try
             {
-                if (!_spotifyApi.IsUserLoggedIn() || !_playerService.ShouldListen())
+                if (!_spotifyApi.IsUserLoggedIn())
                 {
-                    _logger.LogInformation("Waiting, {logIn} {listening}", _spotifyApi.IsUserLoggedIn(), _playerService.ShouldListen());
+                    _logger.LogInformation("Waiting, logIn: {logIn}", _spotifyApi.IsUserLoggedIn());
                     _currentAlbumId = string.Empty;
                     _timer = _timerWhileWaiting;
                     continue;
                 }
 
-                var currentlyPlaying = await _mediator.Send(GetCurrentTrackQuery.Default);
+                var currentlyPlaying = await _mediator.Send(GetCurrentTrackQuery.Default, stoppingToken);
 
                 if (currentlyPlaying == null)
                 {
                     _timer = _timerWhileWaiting;
-                    await HandleNoTrackIsPlaying(stoppingToken);
+                    HandleNoTrackIsPlaying(stoppingToken);
                 }
                 else
                 {
@@ -62,12 +62,12 @@ public class PlayerListener : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while listening: {@Track} {AlbumId}, {Exception}", _currentTrack, _currentAlbumId, ex.Message);
+                _logger.LogError(ex, "Error while listening: {Track} {AlbumId}, {Exception}", _currentTrack.Name, _currentAlbumId, ex.Message);
             }
         }
     }
 
-    private async Task HandleNoTrackIsPlaying(CancellationToken stoppingToken)
+    private void HandleNoTrackIsPlaying(CancellationToken stoppingToken)
     {
         if (_currentAlbumId != string.Empty)
         {
@@ -84,7 +84,7 @@ public class PlayerListener : BackgroundService
             _logger.LogInformation("Now listening to {Track}", currentlyPlaying.Name);
             _currentTrack = currentlyPlaying;
             await _mediator.Publish(new TrackChangedNotification(_currentTrack), stoppingToken);
-            if (_currentTrack.Album.Id != _currentAlbumId)
+            if (_currentTrack.Album.Id != _currentAlbumId && _playerService.ShouldListen())
             {
                 _currentAlbumId = _currentTrack.Album.Id;
                 await _mediator.Publish(new ColorChangedNotification(_currentTrack.HsvColor), stoppingToken);

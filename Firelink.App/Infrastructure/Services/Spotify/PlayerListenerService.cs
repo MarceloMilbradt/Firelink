@@ -14,4 +14,9 @@ public class PlayerListenerService : IPlayerListenerService
     {
         _shouldListen = !_shouldListen;
     }
+
+    public void SetListen(bool shouldListen)
+    {
+        _shouldListen = shouldListen;
+    }
 }

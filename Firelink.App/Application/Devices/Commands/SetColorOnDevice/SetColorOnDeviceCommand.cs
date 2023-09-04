@@ -20,7 +20,7 @@ internal sealed class SetColorOnDeviceCommandHandler : IRequestHandler<SetColorO
     {
         var command = new Command
         {
-            Code = "colour_data",
+            Code = LedCommands.Color,
             Value = request.Color,
         };
 

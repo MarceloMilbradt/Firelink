@@ -3,6 +3,7 @@ using Firelink.App.Server.Extensions;
 using Firelink.App.Shared;
 using Firelink.App.Shared.Devices;
 using Firelink.Application.Devices.Commands.CreateRainbowEffect;
+using Firelink.Application.Devices.Commands.SyncWithMusic;
 using Firelink.Application.Devices.Commands.ToggleDevices;
 using Firelink.Application.Devices.Queries.GetUserDevices;
 using MediatR;
@@ -17,9 +18,11 @@ public class DeviceEndpoints : IEndpointDefinition
 {
     public void DefineEndpoints(WebApplication app)
     {
-        app.MapGet("/devices", GetDevices);
-        app.MapPatch("/device/{id}", ToggleDevices);
-        app.MapPost("/devices/rainbow", SetAsRainbow);
+        var endpointGroup = app.MapGroup("devices");
+        endpointGroup.MapGet("", GetDevices);
+        endpointGroup.MapPatch("{id}", ToggleDevices);
+        endpointGroup.MapPost("rainbow", SetAsRainbow);
+        endpointGroup.MapPost("musicsync", SetAsSync);
     }
 
     private async Task<Results<Ok,BadRequest>> SetAsRainbow(IMediator mediator)
@@ -27,15 +30,20 @@ public class DeviceEndpoints : IEndpointDefinition
         await mediator.Send(request: new CreateRainbowEffectCommand());
         return TypedResults.Ok();
     }
+    private async Task<Results<Ok, BadRequest>> SetAsSync(IMediator mediator)
+    {
+        await mediator.Send(request: new SyncMusicCommand());
+        return TypedResults.Ok();
+    }
     private async Task<Results<Ok<ResultResponse<DeviceDto>>, BadRequest>> ToggleDevices(IMediator mediator, [FromRoute] string id, [FromBody] ToggleDeviceCommand request)
     {
         var device = await mediator.Send(request: new ToggleDeviceCommand(id, request.Power));
-        return TypedResults.Ok(new ResultResponse<DeviceDto>(device, true));
+        return TypedResults.Ok(ResultResponse<DeviceDto>.Ok(device));
     }
 
     private async Task<Results<Ok<ResultResponse<IEnumerable<DeviceDto>>>, BadRequest>> GetDevices(IMediator mediator)
     {
         var devices = await mediator.Send(GetUserDevicesQuery.Default);
-        return TypedResults.Ok(new ResultResponse<IEnumerable<DeviceDto>>(devices, true));
+        return TypedResults.Ok(ResultResponse<IEnumerable<DeviceDto>>.Ok(devices));
     }
 }

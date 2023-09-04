@@ -14,6 +14,14 @@ public class TurnOnDeviceOnStartup : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await _mediator.Send(ToggleAllDevicesCommand.Default, stoppingToken);
+        try
+        {
+            await _mediator.Send(ToggleAllDevicesCommand.Default, stoppingToken);
+
+        }
+        catch (Exception ex)
+        {
+
+        }
     }
 }
