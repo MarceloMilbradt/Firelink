@@ -5,7 +5,7 @@ using HtmlAgilityPack;
 
 namespace Firelink.Infrastructure.Common.Colors;
 
-public static class ColorScraper
+public static partial class ColorScraper
 {
     public static async Task<Color> ScrapeColorForAlbum(string url)
     {
@@ -14,11 +14,11 @@ public static class ColorScraper
 
         var mainDiv = doc.GetElementbyId("main");
         var target = mainDiv
+            .ChildNodes[1]
             .FirstChild
             .FirstChild
             .FirstChild
-            .FirstChild
-            .FirstChild
+            .ChildNodes[1]
             .FirstChild;
 
         var color = GetColorForElement(target);
@@ -30,10 +30,11 @@ public static class ColorScraper
         var attributes = node.GetAttributes();
         var style = attributes.First(a => a.Name == "style").Value;
 
-        var rgx = Regex.Match(style, "#\\w+");
+        var rgx = ColorRegex().Match(style);
         var color = rgx.Groups.Values.First().Value;
         return ColorTranslator.FromHtml(color);
     }
-    
 
+    [GeneratedRegex("#\\w+")]
+    private static partial Regex ColorRegex();
 }

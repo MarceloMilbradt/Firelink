@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>Firelink.Application</RootNamespace>
@@ -13,9 +13,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-      <PackageReference Include="MediatR" Version="12.0.1" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0-preview.3.23174.8" />
-      <PackageReference Include="SpotifyAPI.Web" Version="7.0.0" />
+      <PackageReference Include="MediatR" Version="12.1.1" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+      <PackageReference Include="SpotifyAPI.Web" Version="7.0.2" />
     </ItemGroup>
 
     <ItemGroup>
