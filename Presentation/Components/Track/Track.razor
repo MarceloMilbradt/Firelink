@@ -1,0 +1,65 @@
+﻿@using Firelink.Application.Common.Interfaces
+@using Firelink.Application.Tracks.Events.TrackChanged
+@using Firelink.Application.Tracks.Queries.GetCurrentTrack
+@inject ISender Sender
+@implements IDisposable
+
+<div class="wrapper text-center" style="@style">
+    <div class="track container col-md-6 shadow-lg py-2 px-4 bg-dark" style="@styleWithColor">
+        <SideMenu></SideMenu>
+        <RainbowButton></RainbowButton>
+        @if (CurrentTrack != null)
+        {
+            <TrackInfo Track="CurrentTrack" Class="justify-content-md-center row gy-1 my-3"></TrackInfo>
+            <Wave Color="@color" Levels="levels" Class="row my-3"></Wave>
+        }
+        else
+        {
+            <h2 class="row my-3 text-light text-center">No Track Playing</h2>
+        }
+    </div>
+</div>
+
+
+@code {
+    public TrackDto? CurrentTrack { get; set; }
+    private string color;
+    private IEnumerable<double>? levels = new List<double>();
+    private string style;
+    private string styleWithColor;
+    protected override async Task OnInitializedAsync()
+    {
+        OnTrackChange(await Sender.Send(GetCurrentTrackQuery.Default));
+
+    }
+    protected override void OnInitialized()
+    {
+        TrackChanged += async (_, track) =>
+               {
+                   await InvokeAsync(() =>
+                   {
+                       OnTrackChange(track);
+                       StateHasChanged();
+                   });
+               };
+    }
+    private void OnTrackChange(TrackDto newTrack)
+    {
+        color = newTrack.RGBColor;
+        levels = newTrack.Levels;
+        styleWithColor = $"background: linear-gradient(to top, rgba({color}, 0.5) 0%, rgba({color}, 0) 100%);";
+        style = $"background-image:url('{newTrack.Album.Image.Url}');   background-repeat: no-repeat;   background-position: center;   background-size: cover;";
+        CurrentTrack = newTrack;
+    }
+    public void Dispose()
+    {
+        TrackChanged -= async (_, track) =>
+               {
+                   await InvokeAsync(() =>
+                   {
+                       OnTrackChange(track);
+                       StateHasChanged();
+                   });
+               }; ;
+    }
+}

@@ -1,15 +1,13 @@
 ﻿using Firelink.App.Shared.Devices;
 using Firelink.Application.Common.Interfaces;
-using MediatR;
+using Mediator;
 using TuyaConnector.Data;
 
 namespace Firelink.Application.Devices.Commands.ToggleDevices;
 
-public record ToggleDeviceCommand(string DeviceId, bool Power) : IRequest<DeviceDto>
-{
-}
+public sealed record ToggleDeviceCommand(string DeviceId, bool Power) : IRequest<DeviceDto>;
 
-internal sealed class ToggleDeviceCommandHandler : IRequestHandler<ToggleDeviceCommand, DeviceDto>
+public sealed class ToggleDeviceCommandHandler : IRequestHandler<ToggleDeviceCommand, DeviceDto>
 {
     private readonly ITuyaConnector _tuyaConnector;
 
@@ -18,7 +16,7 @@ internal sealed class ToggleDeviceCommandHandler : IRequestHandler<ToggleDeviceC
         _tuyaConnector = tuyaConnector;
     }
 
-    public async Task<DeviceDto> Handle(ToggleDeviceCommand request, CancellationToken cancellationToken)
+    public async ValueTask<DeviceDto> Handle(ToggleDeviceCommand request, CancellationToken cancellationToken)
     {
         var command = new Command
         {
@@ -27,6 +25,7 @@ internal sealed class ToggleDeviceCommandHandler : IRequestHandler<ToggleDeviceC
         };
 
         var device = await _tuyaConnector.SendUpdateCommandToDevice(request.DeviceId, command, cancellationToken);
+
         return new DeviceDto
         {
             Id = device.Id,

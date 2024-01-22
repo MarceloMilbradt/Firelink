@@ -3,7 +3,7 @@ using Firelink.Application.Common.Interfaces;
 using Firelink.Application.Tracks.Events.ColorChanged;
 using Firelink.Application.Tracks.Events.TrackChanged;
 using Firelink.Application.Tracks.Queries.GetCurrentTrack;
-using MediatR;
+using Mediator;
 
 namespace Firelink.App.Server.Features.Spotify.Player;
 

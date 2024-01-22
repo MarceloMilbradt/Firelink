@@ -4,7 +4,7 @@ using Firelink.App.Shared;
 using Firelink.Application.Auth.Commands.AuthenticateUserCommand;
 using Firelink.Application.Auth.Queries.GetLoginUri;
 using Firelink.Application.Auth.Queries.GetUserLoginStatus;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Firelink.App.Server.Features.Spotify.Auth;
@@ -21,8 +21,8 @@ public class AuthEndpoints : IEndpointDefinition
 
     private static async Task<Results<Ok<ResultResponse<bool>>, BadRequest>> IsUserLoggedIn(IMediator mediator)
     {
-        var isLoggedIn = await mediator.Send(GetUserLoginStatusQuery.Default);
-        return TypedResults.Ok(new ResultResponse<bool>(isLoggedIn, true));
+        //var isLoggedIn = await mediator.Send(GetUserLoginStatusQuery.Default);
+        return TypedResults.Ok(new ResultResponse<bool>(true, true));
     }
 
     private static async Task<IResult> LoginWithToken(IMediator mediator, string code)

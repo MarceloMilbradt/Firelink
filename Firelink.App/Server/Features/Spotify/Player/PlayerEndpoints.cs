@@ -3,7 +3,7 @@ using Firelink.App.Shared.Devices;
 using Firelink.App.Shared;
 using Firelink.Application.Player.Commands.Listening;
 using Firelink.Application.Player.Queries.Listening;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Firelink.App.Server.Features.Spotify.Player;

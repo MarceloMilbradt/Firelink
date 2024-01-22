@@ -6,7 +6,7 @@ using Firelink.Application.Devices.Commands.CreateRainbowEffect;
 using Firelink.Application.Devices.Commands.SyncWithMusic;
 using Firelink.Application.Devices.Commands.ToggleDevices;
 using Firelink.Application.Devices.Queries.GetUserDevices;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyAPI.Web.Http;

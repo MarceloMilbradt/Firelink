@@ -1,5 +1,5 @@
 ﻿using Firelink.Application.Common.Interfaces;
-using MediatR;
+using Mediator;
 
 namespace Firelink.Application.Auth.Queries.GetUserLoginStatus;
 
@@ -9,7 +9,7 @@ public sealed record GetUserLoginStatusQuery : IRequest<bool>
 }
 
 
-internal sealed  class GetUserLoginStatusQueryHandler : IRequestHandler<GetUserLoginStatusQuery, bool>
+public sealed  class GetUserLoginStatusQueryHandler : IRequestHandler<GetUserLoginStatusQuery, bool>
 {
     private readonly ISpotifyApi _spotifyApi;
 
@@ -18,8 +18,8 @@ internal sealed  class GetUserLoginStatusQueryHandler : IRequestHandler<GetUserL
         _spotifyApi = spotifyApi;
     }
 
-    public Task<bool> Handle(GetUserLoginStatusQuery request, CancellationToken cancellationToken)
+    public ValueTask<bool> Handle(GetUserLoginStatusQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult(_spotifyApi.IsUserLoggedIn());
+        return ValueTask.FromResult(_spotifyApi.IsUserLoggedIn());
     }
 }

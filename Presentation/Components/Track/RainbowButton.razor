@@ -1,0 +1,40 @@
+﻿@using Firelink.Application.Devices.Commands.CreateRainbowEffect
+@using Firelink.Application.Player.Commands.Listening
+@using Firelink.Application.Player.Queries.Listening
+@inject ISender Sender
+
+<div class="@Class">
+    @if (IsListening)
+    {
+        <a class="float-end text-decoration-none text-light mx-2" role="button" title="Rainbow Effect" @onclick="SetRainbow">
+            <i class="bi bi-magic"></i>
+        </a>
+    }
+    else
+    {
+        <a class="float-end text-decoration-none text-light mx-2" role="button" title="Sync with music" @onclick="SyncWithMusic">
+            <i class="bi bi-arrow-repeat"></i>
+        </a>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string Class { get; set; }
+    public bool IsListening { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsListening = await Sender.Send(new IsListeningQuery());
+    }
+    public async Task SetRainbow()
+    {
+        await Sender.Send(new CreateRainbowEffectCommand());
+        IsListening = false;
+    }
+    public async Task SyncWithMusic()
+    {
+        await Sender.Send(SetPlayerListeningCommand.Listen);
+        IsListening = true;
+    }
+}

@@ -1,6 +1,5 @@
-﻿using Firelink.App.Shared;
-using Firelink.Application.Common.Interfaces;
-using MediatR;
+﻿using Firelink.Application.Common.Interfaces;
+using Mediator;
 using TuyaConnector.Data;
 
 namespace Firelink.Application.Devices.Commands.ToggleAllDevices;
@@ -10,7 +9,7 @@ public record ToggleAllDevicesCommand(bool Power) : IRequest<bool>
     public static readonly ToggleAllDevicesCommand Default = new(true);
 }
 
-internal sealed class ToggleAllDevicesCommandHandler : IRequestHandler<ToggleAllDevicesCommand, bool>
+public sealed class ToggleAllDevicesCommandHandler : IRequestHandler<ToggleAllDevicesCommand, bool>
 {
     private readonly ITuyaConnector _tuyaConnector;
 
@@ -19,7 +18,7 @@ internal sealed class ToggleAllDevicesCommandHandler : IRequestHandler<ToggleAll
         _tuyaConnector = tuyaConnector;
     }
 
-    public async Task<bool> Handle(ToggleAllDevicesCommand request, CancellationToken cancellationToken)
+    public async ValueTask<bool> Handle(ToggleAllDevicesCommand request, CancellationToken cancellationToken)
     {
         var devices = await _tuyaConnector.GetUserDevices(cancellationToken);
         var command = new Command
@@ -28,7 +27,7 @@ internal sealed class ToggleAllDevicesCommandHandler : IRequestHandler<ToggleAll
             Value = request.Power,
         };
 
-        var deviceTasks = devices.Select(device => _tuyaConnector.SendUpdateCommandToDevice(device.Id, command, cancellationToken)).ToList();
+        var deviceTasks = devices.Select(device => _tuyaConnector.SendUpdateCommandToDevice(device.Id, command, cancellationToken));
         await Task.WhenAll(deviceTasks);
         return true;
     }

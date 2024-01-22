@@ -1,6 +1,6 @@
 ﻿using Firelink.App.Shared;
 using Firelink.Application.Tracks.Queries.GetCurrentTrack;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Firelink.App.Server.Features.Spotify.Track;

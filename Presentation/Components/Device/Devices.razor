@@ -1,0 +1,20 @@
+﻿@using Firelink.Application.Devices.Queries.GetUserDevices
+@inject ISender Sender
+
+
+@if (UserDevices != null && UserDevices.Any())
+{
+    @foreach (var device in UserDevices)
+    {
+        <Device Item="device"></Device>
+    }
+}
+
+@code {
+    private IEnumerable<DeviceDto> UserDevices { get; set; }
+
+    public async Task Load()
+    {
+        UserDevices = await Sender.Send(GetUserDevicesQuery.Default);
+    }
+}

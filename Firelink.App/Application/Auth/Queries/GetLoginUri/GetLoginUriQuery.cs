@@ -1,5 +1,5 @@
 ﻿using Firelink.Application.Common.Interfaces;
-using MediatR;
+using Mediator;
 
 namespace Firelink.Application.Auth.Queries.GetLoginUri;
 
@@ -8,7 +8,7 @@ public sealed record GetLoginUriQuery : IRequest<Uri>
     public readonly static GetLoginUriQuery Default = new();
 }
 
-internal sealed class GetLoginUriQueryHandler : IRequestHandler<GetLoginUriQuery, Uri>
+public sealed class GetLoginUriQueryHandler : IRequestHandler<GetLoginUriQuery, Uri>
 {
     private readonly ISpotifyApi _spotifyApi;
 
@@ -17,9 +17,9 @@ internal sealed class GetLoginUriQueryHandler : IRequestHandler<GetLoginUriQuery
         _spotifyApi = spotifyApi;
     }
 
-    public Task<Uri> Handle(GetLoginUriQuery request, CancellationToken cancellationToken)
+    public ValueTask<Uri> Handle(GetLoginUriQuery request, CancellationToken cancellationToken)
     {
         var uri = _spotifyApi.GetLoginUri();
-        return Task.FromResult(uri);
+        return ValueTask.FromResult(uri);
     }
 }

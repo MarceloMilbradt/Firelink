@@ -1,5 +1,5 @@
 ﻿using Firelink.Application.Devices.Commands.ToggleAllDevices;
-using MediatR;
+using Mediator;
 
 namespace Firelink.App.Server.Features.Devices;
 
