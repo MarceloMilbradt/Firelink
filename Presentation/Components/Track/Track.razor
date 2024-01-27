@@ -2,7 +2,7 @@
 @using Firelink.Application.Tracks.Events.TrackChanged
 @using Firelink.Application.Tracks.Queries.GetCurrentTrack
 @inject ISender Sender
-@implements IDisposable
+@inject ICourier Courier;
 
 <div class="wrapper text-center" style="@style">
     <div class="track container col-md-6 shadow-lg py-2 px-4 bg-dark" style="@styleWithColor">
@@ -27,39 +27,31 @@
     private IEnumerable<double>? levels = new List<double>();
     private string style;
     private string styleWithColor;
+
     protected override async Task OnInitializedAsync()
     {
-        OnTrackChange(await Sender.Send(GetCurrentTrackQuery.Default));
+        var newTrack = await Sender.Send(GetCurrentTrackQuery.Default);
+        ChangeTrack(newTrack);
+        Courier.Subscribe<TrackChangedNotification>(HandleTrackEvent);
+    }
 
-    }
-    protected override void OnInitialized()
+    private void ChangeTrack(TrackDto newTrack)
     {
-        TrackChanged += async (_, track) =>
-               {
-                   await InvokeAsync(() =>
-                   {
-                       OnTrackChange(track);
-                       StateHasChanged();
-                   });
-               };
-    }
-    private void OnTrackChange(TrackDto newTrack)
-    {
+        if (newTrack.Id == CurrentTrack?.Id)
+        {
+            return;
+        }
+
         color = newTrack.RGBColor;
         levels = newTrack.Levels;
         styleWithColor = $"background: linear-gradient(to top, rgba({color}, 0.5) 0%, rgba({color}, 0) 100%);";
         style = $"background-image:url('{newTrack.Album.Image.Url}');   background-repeat: no-repeat;   background-position: center;   background-size: cover;";
         CurrentTrack = newTrack;
     }
-    public void Dispose()
+
+    private void HandleTrackEvent(TrackChangedNotification notification, CancellationToken token)
     {
-        TrackChanged -= async (_, track) =>
-               {
-                   await InvokeAsync(() =>
-                   {
-                       OnTrackChange(track);
-                       StateHasChanged();
-                   });
-               }; ;
+        ChangeTrack(notification.NewTrack);
     }
+
 }
