@@ -15,7 +15,8 @@ public static class ConfigureServices
         services.AddTransient<IDateTime, DateTimeProvider>();
         services.AddSingleton<IPlayerListenerService, PlayerListenerService>();
         services.AddTransient<ISpotifyTrackAnalyticsService, SpotifyTrackAnalyticsService>();
-        services.AddTransient<ITuyaConnector,TuyaConnectorService>();
+        services.AddTransient<ITuyaConnector, TuyaConnectorService>();
+        services.AddSingleton<IAlbumColorProvider, AlbumColorProvider>();
         services.AddLazyCache();
         return services;
     }
