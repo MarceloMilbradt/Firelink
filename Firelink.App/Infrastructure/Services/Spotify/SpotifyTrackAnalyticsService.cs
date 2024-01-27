@@ -13,11 +13,12 @@ public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
 {
     private readonly IAppCache _cache;
     private readonly ISpotifyApi _spotifyApi;
-
-    public SpotifyTrackAnalyticsService(ISpotifyApi spotifyApi, IAppCache cache)
+    private readonly IAlbumColorProvider _albumColorProvider;
+    public SpotifyTrackAnalyticsService(ISpotifyApi spotifyApi, IAppCache cache, IAlbumColorProvider albumColorProvider)
     {
         _spotifyApi = spotifyApi;
         _cache = cache;
+        _albumColorProvider = albumColorProvider;
     }
 
     public async Task<TrackDto?> GetTrackWithFeatures(CancellationToken cancellationToken)
@@ -32,7 +33,7 @@ public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
             {
                 var feturesTask = GetFeatures(track.Id);
                 var analysisTask = GetAnalysis(track.Id);
-                var colorTask = ColorScraper.ScrapeColorForAlbum(track.Album.ExternalUrls["spotify"]);
+                var colorTask = _albumColorProvider.GetColorForAlbumUrl(track.Album.ExternalUrls["spotify"]);
 
                 await Task.WhenAll(feturesTask, analysisTask, colorTask);
                 var color = colorTask.Result;
