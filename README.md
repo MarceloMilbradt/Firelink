@@ -1,6 +1,6 @@
 # Firelink
 
-Firelink is a .NET 7 project that seamlessly changes the color of your Tuya LED device to match the album color you're listening to on Spotify. It features a responsive web UI built with Blazor WebAssembly and leverages SignalR for real-time communication. The project follows the CQRS pattern using MediatR on the backend and communicates with the Tuya Cloud API to manage the LED device.
+Firelink is a .NET 8 project that seamlessly changes the color of your Tuya LED device to match the album color you're listening to on Spotify. It features a responsive web UI built with Blazor WebAssembly and leverages SignalR for real-time communication. The project follows the CQRS pattern using MediatR on the backend and communicates with the Tuya Cloud API to manage the LED device.
 
 ## Project Architecture
 
