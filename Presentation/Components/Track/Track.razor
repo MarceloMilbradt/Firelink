@@ -1,0 +1,41 @@
+﻿@using Firelink.Application.Common.Interfaces
+@using Firelink.Application.Tracks.Events.TrackChanged
+@using Firelink.Application.Tracks.Queries.GetCurrentTrack
+@inject ISender Sender
+
+<div class="container col-md-6 py-2 px-4">
+    @if (CurrentTrack != null)
+    {
+        <TrackInfo Track="CurrentTrack" Class="justify-content-md-center row gy-1 my-3"></TrackInfo>
+        <Wave Color="@color" Levels="levels" Class="row my-3 bg-light rounded-pill"></Wave>
+    }
+    else
+    {
+        <h2 class="row my-3 text-light text-center">No Track Playing</h2>
+    }
+</div>
+
+
+@code {
+    public TrackDto? CurrentTrack { get; set; }
+    private string color;
+    private IEnumerable<double>? levels = new List<double>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var newTrack = await Sender.Send(GetCurrentTrackQuery.Default);
+        ChangeTrack(newTrack);
+    }
+
+    private void ChangeTrack(TrackDto newTrack)
+    {
+        if (newTrack.Id == CurrentTrack?.Id)
+        {
+            return;
+        }
+
+        color = newTrack.RGBColor;
+        levels = newTrack.Levels;
+        CurrentTrack = newTrack;
+    }
+}

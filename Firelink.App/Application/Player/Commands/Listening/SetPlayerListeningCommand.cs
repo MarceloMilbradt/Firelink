@@ -1,20 +1,15 @@
 ﻿using Firelink.Application.Common.Interfaces;
-using Firelink.Application.Devices.Commands.CreateRainbowEffect;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mediator;
 
 namespace Firelink.Application.Player.Commands.Listening;
 
-public record SetPlayerListeningCommand(bool Value) : IRequest
+public sealed record SetPlayerListeningCommand(bool Value) : IRequest
 {
     public static readonly SetPlayerListeningCommand Listen = new(true);
     public static readonly SetPlayerListeningCommand Stop = new(false);
 }
-internal sealed class SetPlayerListeningCommandHandler : IRequestHandler<SetPlayerListeningCommand>
+
+public sealed class SetPlayerListeningCommandHandler : IRequestHandler<SetPlayerListeningCommand>
 {
     private readonly IPlayerListenerService _playerListenerService;
 
@@ -23,9 +18,9 @@ internal sealed class SetPlayerListeningCommandHandler : IRequestHandler<SetPlay
         _playerListenerService = playerListenerService;
     }
 
-    public Task Handle(SetPlayerListeningCommand request, CancellationToken cancellationToken)
+    public ValueTask<Unit> Handle(SetPlayerListeningCommand request, CancellationToken cancellationToken)
     {
         _playerListenerService.SetListen(request.Value);
-        return Task.CompletedTask;
+        return Unit.ValueTask;
     }
 }

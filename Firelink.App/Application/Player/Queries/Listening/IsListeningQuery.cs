@@ -1,15 +1,10 @@
 ﻿using Firelink.Application.Common.Interfaces;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mediator;
 
 namespace Firelink.Application.Player.Queries.Listening;
 
 public record IsListeningQuery : IRequest<bool>;
-internal sealed class IsListeningQueryHandler : IRequestHandler<IsListeningQuery, bool>
+public sealed class IsListeningQueryHandler : IRequestHandler<IsListeningQuery, bool>
 {
     private readonly IPlayerListenerService _playerListenerService;
 
@@ -18,8 +13,8 @@ internal sealed class IsListeningQueryHandler : IRequestHandler<IsListeningQuery
         _playerListenerService = playerListenerService;
     }
 
-    public Task<bool> Handle(IsListeningQuery request, CancellationToken cancellationToken)
+    public ValueTask<bool> Handle(IsListeningQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult(_playerListenerService.ShouldListen());
+        return ValueTask.FromResult(_playerListenerService.ShouldListen());
     }
 }

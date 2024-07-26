@@ -1,11 +1,10 @@
 ﻿using Firelink.Application.Common.Interfaces;
-using MediatR;
-using SpotifyAPI.Web;
+using Mediator;
 using TuyaConnector.Data;
 
 namespace Firelink.Application.Tracks.Events.ColorChanged;
 
-internal sealed class ColorChangedNotificationHandler : INotificationHandler<ColorChangedNotification>
+public sealed class ColorChangedNotificationHandler : INotificationHandler<ColorChangedNotification>
 {
     private readonly ITuyaConnector _tuyaConnector;
 
@@ -14,7 +13,7 @@ internal sealed class ColorChangedNotificationHandler : INotificationHandler<Col
         _tuyaConnector = tuyaConnector;
     }
 
-    public async Task Handle(ColorChangedNotification notification, CancellationToken cancellationToken)
+    public async ValueTask Handle(ColorChangedNotification notification, CancellationToken cancellationToken)
     {
         return;
         var color = notification.NewColor;

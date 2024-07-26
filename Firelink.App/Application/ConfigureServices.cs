@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using Firelink.Application.Common.Behaviour;
-using MediatR;
+using Firelink.Application.Common.Behavior;
+using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Firelink.Application;
@@ -9,12 +9,9 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddMediatR(cfg =>
-        {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
-            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
-        });
+        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
+        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehavior<,>));
 
         return services;
     }

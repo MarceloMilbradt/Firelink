@@ -1,13 +1,13 @@
 ﻿using Firelink.App.Shared;
 using Firelink.Application.Common.Interfaces;
-using MediatR;
+using Mediator;
 using TuyaConnector.Data;
 
 namespace Firelink.Application.Devices.Commands.SetColorOnDevice;
 
-public record SetColorOnDeviceCommand(string DeviceId, Hsv Color) : IRequest<bool>;
+public sealed record SetColorOnDeviceCommand(string DeviceId, Hsv Color) : IRequest<bool>;
 
-internal sealed class SetColorOnDeviceCommandHandler : IRequestHandler<SetColorOnDeviceCommand, bool>
+public sealed class SetColorOnDeviceCommandHandler : IRequestHandler<SetColorOnDeviceCommand, bool>
 {
     private readonly ITuyaConnector _tuyaConnector;
 
@@ -16,7 +16,7 @@ internal sealed class SetColorOnDeviceCommandHandler : IRequestHandler<SetColorO
         _tuyaConnector = tuyaConnector;
     }
 
-    public async Task<bool> Handle(SetColorOnDeviceCommand request, CancellationToken cancellationToken)
+    public async ValueTask<bool> Handle(SetColorOnDeviceCommand request, CancellationToken cancellationToken)
     {
         var command = new Command
         {

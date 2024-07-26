@@ -1,15 +1,15 @@
 ﻿using Firelink.Application.Common.Interfaces;
-using MediatR;
+using Mediator;
 using SpotifyAPI.Web;
 
 namespace Firelink.Application.Tracks.Queries.GetCurrentFullTrack;
 
-public sealed record GetCurrentFullTrackQuery : IRequest<FullTrack>
+public sealed record GetCurrentFullTrackQuery : IRequest<FullTrack?>
 {
     public static readonly GetCurrentFullTrackQuery Default = new();
 }
 
-internal sealed  class GetCurrentFullTrackQueryHandler : IRequestHandler<GetCurrentFullTrackQuery, FullTrack>
+public sealed  class GetCurrentFullTrackQueryHandler : IRequestHandler<GetCurrentFullTrackQuery, FullTrack?>
 {
     private readonly ISpotifyApi _spotifyApi;
 
@@ -18,7 +18,7 @@ internal sealed  class GetCurrentFullTrackQueryHandler : IRequestHandler<GetCurr
         _spotifyApi = spotifyApi;
     }
 
-    public async Task<FullTrack> Handle(GetCurrentFullTrackQuery request, CancellationToken cancellationToken)
+    public async ValueTask<FullTrack?> Handle(GetCurrentFullTrackQuery request, CancellationToken cancellationToken)
     {
         var currentTrack = await _spotifyApi.GetCurrentTrack(cancellationToken);
         return currentTrack;

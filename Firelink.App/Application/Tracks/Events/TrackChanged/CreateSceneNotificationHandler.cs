@@ -1,11 +1,12 @@
 ﻿using Firelink.App.Shared;
 using Firelink.Application.Common.Interfaces;
-using MediatR;
+using Mediator;
 using TuyaConnector.Data;
 
 namespace Firelink.Application.Tracks.Events.TrackChanged;
+public sealed record TrackChangedNotification(TrackDto Track) : INotification;
 
-internal sealed class CreateSceneNotificationHandler : INotificationHandler<TrackChangedNotification>
+public sealed class CreateSceneNotificationHandler : INotificationHandler<TrackChangedNotification>
 {
     private readonly ISpotifyTrackAnalyticsService _trackAnalyticsService;
     private readonly ITuyaConnector _tuyaConnector;
@@ -19,11 +20,13 @@ internal sealed class CreateSceneNotificationHandler : INotificationHandler<Trac
         _playerListenerService = playerListenerService;
     }
 
-    public async Task Handle(TrackChangedNotification notification, CancellationToken cancellationToken)
+    public async ValueTask Handle(TrackChangedNotification notification, CancellationToken cancellationToken)
     {
         if (!_playerListenerService.ShouldListen()) return;
 
         var track = await _trackAnalyticsService.GetTrackWithFeatures(cancellationToken);
+        if(track == null) return;
+
         var energy = track.Energy;
 
         // Energy value is between 0 and 1, so we scale it to 0-100.
@@ -38,7 +41,7 @@ internal sealed class CreateSceneNotificationHandler : INotificationHandler<Trac
             _ => 2,
         };
 
-        List<SceneUnit> units = new List<SceneUnit>();
+        List<SceneUnit> units = [];
         for (int i = 0; i < numUnits; i++)
         {
             var unitSceneColor = baseHsvSceneColor with
@@ -53,7 +56,7 @@ internal sealed class CreateSceneNotificationHandler : INotificationHandler<Trac
         var scene = new Scene
         {
             SceneNum = 101,
-            SceneUnits = units.ToArray()
+            SceneUnits = [.. units]
         };
 
         var command = new Command

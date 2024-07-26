@@ -1,22 +1,20 @@
-﻿using MediatR.Pipeline;
+﻿using Mediator;
 using Microsoft.Extensions.Logging;
 
-namespace Firelink.Application.Common.Behaviour;
+namespace Firelink.Application.Common.Behavior;
 
-public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
+public sealed class LoggingBehaviour<TRequest, TResponse>(ILogger<TRequest> logger) : IPipelineBehavior<TRequest, TResponse> where TRequest : INotification
 {
-    private readonly ILogger _logger;
+    private readonly ILogger _logger = logger;
 
-    public LoggingBehaviour(ILogger<TRequest> logger)
-    {
-        _logger = logger;
-    }
-
-    public async Task Process(TRequest request, CancellationToken cancellationToken)
+    public ValueTask<TResponse> Handle(TRequest message, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)
     {
         var requestName = typeof(TRequest).Name;
-        
-        _logger.LogInformation("Firelink Request: {Name} {@Request}",
-            requestName, request);
+
+        _logger.LogInformation("Firelink Notification: {Name} {@Request}",
+            requestName, message);
+
+        return next(message, cancellationToken);
+
     }
 }

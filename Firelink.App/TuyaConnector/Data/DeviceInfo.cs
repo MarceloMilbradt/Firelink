@@ -42,7 +42,7 @@ namespace TuyaConnector.Data
         /// Gets or sets the device ID.
         /// </summary>
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the device IP address.

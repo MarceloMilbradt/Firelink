@@ -18,6 +18,7 @@ public static partial class ColorScraper
             .FirstChild
             .FirstChild
             .FirstChild
+            .FirstChild
             .ChildNodes[1]
             .FirstChild;
 

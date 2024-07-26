@@ -1,26 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>Firelink.Application</RootNamespace>
-        <AssemblyName>Firelink.Application</AssemblyName>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Firelink.Application</RootNamespace>
+		<AssemblyName>Firelink.Application</AssemblyName>
+	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<DebugType>none</DebugType>
 	</PropertyGroup>
 
 	<ItemGroup>
-      <PackageReference Include="MediatR" Version="12.1.1" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-      <PackageReference Include="SpotifyAPI.Web" Version="7.0.2" />
-    </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Shared\Firelink.App.Shared.csproj" />
-      <ProjectReference Include="..\TuyaConnector\TuyaConnector.csproj" />
-    </ItemGroup>
+		<PackageReference Include="Mediator.Abstractions" Version="2.0.*" />
+
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+		<PackageReference Include="SpotifyAPI.Web" Version="7.0.2" />
+		<PackageReference Include="System.Threading.Channels" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Shared\Firelink.App.Shared.csproj" />
+		<ProjectReference Include="..\TuyaConnector\TuyaConnector.csproj" />
+	</ItemGroup>
 
 </Project>

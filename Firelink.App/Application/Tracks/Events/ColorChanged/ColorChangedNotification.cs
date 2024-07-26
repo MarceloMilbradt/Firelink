@@ -1,6 +1,6 @@
 ﻿using Firelink.App.Shared;
-using MediatR;
+using Mediator;
 
 namespace Firelink.Application.Tracks.Events.ColorChanged;
 
-public record ColorChangedNotification(Hsv NewColor) : INotification;
+public sealed record ColorChangedNotification(Hsv NewColor) : INotification;
