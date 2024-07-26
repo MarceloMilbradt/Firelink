@@ -4,6 +4,7 @@ using Mediator;
 using TuyaConnector.Data;
 
 namespace Firelink.Application.Tracks.Events.TrackChanged;
+public sealed record TrackChangedNotification(TrackDto Track) : INotification;
 
 public sealed class CreateSceneNotificationHandler : INotificationHandler<TrackChangedNotification>
 {

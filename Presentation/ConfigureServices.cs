@@ -1,6 +1,4 @@
 ﻿using Firelink.Application.Common.Interfaces;
-using Firelink.Presentation.Events;
-using Firelink.Presentation.Services;
 using Firelink.Presentation.Workers;
 using Mediator;
 using Serilog;
@@ -18,11 +16,8 @@ public static class ConfigureServices
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(Log.Logger, dispose: true));
         services.AddMediator();
 
-        services.AddSingleton<ICourier>((provider) => provider.GetRequiredService<MediatorCourier>());
-
         services.AddHostedService<PlayerListener>();
         services.AddHostedService<TurnOnDevicesOnStartup>();
-        services.AddSingleton<ITrackChangeNotificationChannelProvider, TrackChangeNotificationChannelProvider>();
         return services;
     }
 }
