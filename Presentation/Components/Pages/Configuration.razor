@@ -1,0 +1,67 @@
+﻿@page "/configuration"
+@using Firelink.Application.Configuration.Commands.CreateConfiguration
+@using System.ComponentModel.DataAnnotations
+@inject ISender Mediator
+@inherits AuthenticatedComponent
+
+<PageTitle>Firelink</PageTitle>
+
+<EditForm EditContext="editContext" OnValidSubmit="Submit" FormName="Configuration">
+    <div class="container col-md-6 py-2 px-4 text-light">
+        <DataAnnotationsValidator />
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Url</label>
+            <InputText @bind-Value="Model!.Url" class="form-control bg-dark  text-light" id="exampleFormControlInput1"></InputText>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Json Command</label>
+            <InputTextArea @bind-Value="Model!.Json" class="form-control bg-dark text-light" id="exampleFormControlTextarea1" rows="3"></InputTextArea>
+        </div>
+        <div class="mb-3">
+            <ValidationSummary />
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success">Create</button>
+            <a class="btn btn-danger" href="/">Cancel</a>
+        </div>
+    </div>
+</EditForm>
+
+<nav class="navbar fixed-bottom ">
+    <ul class="nav container-fluid justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Song</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active disabled" aria-current="page" tabindex="-1" aria-disabled="true" href="#">Config</a>
+        </li>
+    </ul>
+</nav>
+
+@code {
+    private EditContext? editContext;
+
+    [SupplyParameterFromForm]
+    public ConfigurationModel Model { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Model ??= new();
+        editContext = new(Model);
+    }
+
+    private async Task Submit()
+    {
+        await Mediator.Send(new CreateConfigurationCommand(new Uri(Model.Url), Model.Json));
+    }
+
+    public class ConfigurationModel
+    {
+        [Required]
+        [Url]
+        public string? Url { get; set; }
+        [Required]
+        public string? Json { get; set; }
+    }
+}

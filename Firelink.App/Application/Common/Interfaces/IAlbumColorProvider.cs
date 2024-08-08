@@ -4,5 +4,5 @@ namespace Firelink.Application.Common.Interfaces;
 
 public interface IAlbumColorProvider
 {
-    public Task<Color> GetColorForAlbumUrl(string albumUrl);
+    public Task<Color> GetColorForAlbumUrl(string albumUrl, CancellationToken token);
 }

@@ -33,7 +33,7 @@ public class SpotifyTrackAnalyticsService : ISpotifyTrackAnalyticsService
             {
                 var feturesTask = GetFeatures(track.Id);
                 var analysisTask = GetAnalysis(track.Id);
-                var colorTask = _albumColorProvider.GetColorForAlbumUrl(track.Album.ExternalUrls["spotify"]);
+                var colorTask = _albumColorProvider.GetColorForAlbumUrl(track.Album.ExternalUrls["spotify"], cancellationToken);
 
                 await Task.WhenAll(feturesTask, analysisTask, colorTask);
                 var color = colorTask.Result;

@@ -2,6 +2,7 @@
 using Firelink.Infrastructure.Services;
 using Firelink.Infrastructure.Services.Spotify;
 using Firelink.Infrastructure.Services.Tuya;
+using Firelink.Infrastructure.Services.Wled;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Firelink.Infrastructure;
@@ -17,6 +18,7 @@ public static class ConfigureServices
         services.AddTransient<ISpotifyTrackAnalyticsService, SpotifyTrackAnalyticsService>();
         services.AddTransient<ITuyaConnector, TuyaConnectorService>();
         services.AddSingleton<IAlbumColorProvider, AlbumColorProvider>();
+        services.AddSingleton<IWledConfigurationProvider, WledConfigurationProvider>();
         services.AddLazyCache();
         return services;
     }
