@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Firelink.Application.Common.Behavior;
+using Firelink.Application.Common.Behaviour;
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 

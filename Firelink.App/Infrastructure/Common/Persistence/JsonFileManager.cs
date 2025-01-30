@@ -4,7 +4,7 @@ namespace Firelink.Infrastructure.Common.Persistence;
 
 internal static class JsonFileManager
 {
-    public static async Task<T> LoadFromJson<T>(string path, CancellationToken cancellation)
+    public static async Task<T> LoadFromFile<T>(string path, CancellationToken cancellation)
     {
         try
         {
@@ -24,7 +24,7 @@ internal static class JsonFileManager
         }
     }
 
-    public static async Task SaveToJson<T>(string path, T objectToSave, CancellationToken cancellation)
+    public static async Task SaveToFile<T>(string path, T objectToSave, CancellationToken cancellation)
     {
         string json = JsonSerializer.Serialize(objectToSave);
         await File.WriteAllTextAsync(path, json, cancellation);

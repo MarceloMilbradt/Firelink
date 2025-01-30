@@ -1,0 +1,81 @@
+﻿@page "/customization"
+@using Firelink.Domain.CustomEffects
+@using Firelink.Application.CustomEffects.Commands.DeleteCustomEffect
+@using Firelink.Application.CustomEffects.Queries.GetCustomEffect
+@inject ISender Mediator
+@rendermode RenderMode.InteractiveServer
+@inherits AuthenticatedComponent
+
+
+<div class="container col-md-6 py-2 px-4 text-light">
+    <div class="mb-3 text-center">
+        <a href="/custom" class="btn w-75  btn-success"><i class="bi bi-plus-circle"></i></a>
+    </div>
+
+    <ul class="list-group mb-3">
+        @foreach (var effect in Effects)
+        {
+            <li class="list-group-item  text-light list-group-item-action bg-light bg-opacity-10">
+                <div class="d-flex w-100 justify-content-between">
+                    <div>@effect.Effect.Title</div>
+                    <div class="mx-2">
+                        <a href="/custom/@effect.Effect.ItemId" class="btn btn-success btn-sm"><i class="bi bi-pencil-square"></i></a>
+                        <button @key="effect.Effect.ItemId" @onclick="effect.Action" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+
+<nav class="navbar fixed-bottom ">
+    <ul class="nav container-fluid justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Song</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active disabled" aria-current="page" tabindex="-1" aria-disabled="true" href="#">Customization</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/settings">Settings</a>
+        </li>
+    </ul>
+</nav>
+
+@code {
+    private IEnumerable<EffectWithAction> Effects { get; set; } = [];
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEffects();
+    }
+    protected async Task Delete(CustomEffect effect)
+    {
+        await Mediator.Send(new DeleteCustomEffectCommand(effect.ItemId));
+        await LoadEffects();
+        StateHasChanged();
+    }
+    protected async Task LoadEffects()
+    {
+        var effects = await Mediator.Send(GetAllCustomEffectsQuery.Default);
+        var effectsWithAction = new List<EffectWithAction>();
+        foreach (var effect in effects)
+        {
+            var action = new EffectWithAction();
+
+            action.Effect = effect;
+
+            action.Action = (e) =>
+            {
+                Delete(action.Effect);
+            };
+
+            effectsWithAction.Add(action);
+        }
+        Effects = effectsWithAction;
+    }
+    private class EffectWithAction
+    {
+        public CustomEffect Effect { get; set; }
+        public Action<MouseEventArgs> Action { get; set; } = e => { };
+    }
+}

@@ -7,19 +7,22 @@ namespace Firelink.Infrastructure.Services.Spotify;
 
 internal class AlbumColorProvider : IAlbumColorProvider, IAsyncDisposable
 {
-    private const string JsonFilePath = "AlbumColors.json"; 
-    private Dictionary<string, Color> _colors;
+    private const string JsonFilePath = "AlbumColors";
+    private Dictionary<string, SerializableColor>? _colors;
 
     public async ValueTask DisposeAsync()
     {
-        await JsonFileManager.SaveToJson(JsonFilePath, _colors, default);
+        if (_colors != null && _colors.Any())
+        {
+            await MemoryPackFileManager.SaveToFile(JsonFilePath, _colors, default);
+        }
     }
 
     public async Task<Color> GetColorForAlbumUrl(string albumUrl, CancellationToken token)
     {
-        _colors ??= await JsonFileManager.LoadFromJson<Dictionary<string, Color>>(JsonFilePath, token) ?? [];
+        _colors ??= await MemoryPackFileManager.LoadFromFile<Dictionary<string, SerializableColor>>(JsonFilePath, token) ?? [];
 
-        if (_colors.TryGetValue(albumUrl, out var color))
+        if (_colors.TryGetValue(albumUrl, out var color) && !((Color)color).IsEmpty && color != Color.Black)
         {
             return color;
         }
@@ -27,8 +30,10 @@ internal class AlbumColorProvider : IAlbumColorProvider, IAsyncDisposable
         color = await ColorScraper.ScrapeColorForAlbum(albumUrl, token);
 
         _colors[albumUrl] = color;
-        await JsonFileManager.SaveToJson(JsonFilePath, _colors, token);
-
+        if (_colors != null && _colors.Any())
+        {
+            await MemoryPackFileManager.SaveToFile(JsonFilePath, _colors, token);
+        }
         return color;
     }
 

@@ -3,22 +3,45 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<AssemblyName>Firelink.Presentation</AssemblyName>
+		<AssemblyName>Firelink.App</AssemblyName>
 		<RootNamespace>Firelink.Presentation</RootNamespace>
 		<Company>Firelink.App</Company>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<OutputType>WinExe</OutputType>
+		<ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
+		<PublishTrimmed>False</PublishTrimmed>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DebugType>none</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DebugType>none</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Mediator.SourceGenerator" Version="2.0.*">
+	  <Content Remove="Components\Pages\CustomEffects.razor" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="wwwroot\favicon.ico" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Mediator.SourceGenerator" Version="2.1.7">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 			
 		</PackageReference>
-		<PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+		<PackageReference Include="OneOf" Version="3.0.271" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+		<PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Firelink.App\Application\Application.csproj" />
+	  <ProjectReference Include="..\Firelink.App\Domain\Domain.csproj" />
 	  <ProjectReference Include="..\Firelink.App\Infrastructure\Infrastructure.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Update="wwwroot\favicon.ico">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 </Project>

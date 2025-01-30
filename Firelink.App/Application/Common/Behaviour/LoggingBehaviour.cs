@@ -1,7 +1,7 @@
 ﻿using Mediator;
 using Microsoft.Extensions.Logging;
 
-namespace Firelink.Application.Common.Behavior;
+namespace Firelink.Application.Common.Behaviour;
 
 public sealed class LoggingBehaviour<TRequest, TResponse>(ILogger<TRequest> logger) : IPipelineBehavior<TRequest, TResponse> where TRequest : INotification
 {

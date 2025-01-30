@@ -1,0 +1,56 @@
+﻿@page "/settings"
+@using Firelink.Application.Player.Commands.Listening
+@using Firelink.Application.Player.Queries.Listening
+@inject IMediator Mediator;
+@rendermode InteractiveServer
+<div class="container col-md-6 py-2 px-4 text-light">
+    @if (IsListening)
+    {
+        <button type="button" @onclick="PauseListening" class="btn btn-danger">
+            <i class="bi bi-pause-circle"></i> Pause Listening
+        </button>
+    }
+    else
+    {
+        <button type="button" @onclick="StartListening" class="btn btn-success">
+            <i class="bi bi-play-circle"></i> Start Listening
+        </button>
+    }
+</div>
+
+<nav class="navbar fixed-bottom ">
+    <ul class="nav container-fluid justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Song</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/customization">Customization</a>
+        </li>
+        <li class="nav-item">
+            <a  class="nav-link active disabled" aria-current="page" tabindex="-1" aria-disabled="true" href="#">Settings</a>
+        </li>
+    </ul>
+</nav>
+
+
+
+@code {
+    public bool IsListening { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsListening = await Mediator.Send(new IsListeningQuery());
+    }
+
+    private async Task StartListening(MouseEventArgs args)
+    {
+        await Mediator.Send(SetPlayerListeningCommand.Listen);
+        IsListening = true;
+    }
+
+    private async Task PauseListening(MouseEventArgs args)
+    {
+        await Mediator.Send(SetPlayerListeningCommand.Stop);
+        IsListening = false;
+    }
+}
