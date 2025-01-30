@@ -7,7 +7,7 @@
     @if (CurrentTrack != null)
     {
         <TrackInfo Track="CurrentTrack" Class="justify-content-md-center row gy-1 my-3"></TrackInfo>
-        <Wave Color="@color" Levels="levels" Class="row my-3 bg-light rounded-pill"></Wave>
+        @* <Wave Color="@color" Levels="levels" Class="row my-3 bg-light rounded-pill"></Wave> *@
     }
     else
     {
@@ -24,7 +24,10 @@
     protected override async Task OnInitializedAsync()
     {
         var newTrack = await Sender.Send(GetCurrentTrackQuery.Default);
-        ChangeTrack(newTrack);
+        newTrack.Switch(
+            track => ChangeTrack(track),
+            noTrack => CurrentTrack = null
+        );
     }
 
     private void ChangeTrack(TrackDto newTrack)
@@ -35,7 +38,6 @@
         }
 
         color = newTrack.RGBColor;
-        levels = newTrack.Levels;
         CurrentTrack = newTrack;
     }
 }

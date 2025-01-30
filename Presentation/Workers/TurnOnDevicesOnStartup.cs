@@ -15,14 +15,12 @@ public class TurnOnDevicesOnStartup : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        try
-        {
-            await _sender.Send(ToggleAllDevicesCommand.Default, stoppingToken);
 
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error turning on devices");
-        }
+        var result = await _sender.Send(ToggleAllDevicesCommand.Default, stoppingToken);
+        result.Switch(
+            success => { },
+            error => _logger.LogError("Error turning on devices {@Error}", error)
+            );
+
     }
 }

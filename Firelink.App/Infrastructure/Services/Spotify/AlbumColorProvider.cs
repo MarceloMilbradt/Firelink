@@ -1,68 +1,40 @@
 ﻿using Firelink.Application.Common.Interfaces;
 using Firelink.Infrastructure.Common.Colors;
-using Newtonsoft.Json;
+using Firelink.Infrastructure.Common.Persistence;
 using System.Drawing;
 
 namespace Firelink.Infrastructure.Services.Spotify;
 
 internal class AlbumColorProvider : IAlbumColorProvider, IAsyncDisposable
 {
-    private const string JsonFilePath = "AlbumColors.json"; 
-    private Dictionary<string, Color> _colors;
+    private const string JsonFilePath = "AlbumColors";
+    private Dictionary<string, SerializableColor>? _colors;
 
     public async ValueTask DisposeAsync()
     {
-        await SaveColorsToJson();
+        if (_colors != null && _colors.Any())
+        {
+            await MemoryPackFileManager.SaveToFile(JsonFilePath, _colors, default);
+        }
     }
 
-    public async Task<Color> GetColorForAlbumUrl(string albumUrl)
+    public async Task<Color> GetColorForAlbumUrl(string albumUrl, CancellationToken token)
     {
-        // Load colors from JSON file if empty
-        if (_colors == null)
-        {
-            await LoadColorsFromJson();
-        }
+        _colors ??= await MemoryPackFileManager.LoadFromFile<Dictionary<string, SerializableColor>>(JsonFilePath, token) ?? [];
 
-        // Try to get the color from the dictionary
-        if (_colors.TryGetValue(albumUrl, out var color))
+        if (_colors.TryGetValue(albumUrl, out var color) && !((Color)color).IsEmpty && color != Color.Black)
         {
             return color;
         }
 
-        // If not present, try to get the color from another source
-        color = await ColorScraper.ScrapeColorForAlbum(albumUrl);
+        color = await ColorScraper.ScrapeColorForAlbum(albumUrl, token);
 
-        // Save the color to the file and the dictionary
         _colors[albumUrl] = color;
-        await SaveColorsToJson();
-
+        if (_colors != null && _colors.Any())
+        {
+            await MemoryPackFileManager.SaveToFile(JsonFilePath, _colors, token);
+        }
         return color;
-    }
-
-    private async Task LoadColorsFromJson()
-    {
-        try
-        {
-            if (File.Exists(JsonFilePath))
-            {
-                string json = await File.ReadAllTextAsync(JsonFilePath);
-                _colors = JsonConvert.DeserializeObject<Dictionary<string, Color>>(json) ?? [];
-            }
-            else
-            {
-                _colors = [];
-            }     
-        }
-        catch (Exception)
-        {
-            _colors = [];
-        }
-    }
-
-    private async Task SaveColorsToJson()
-    {
-        string json = JsonConvert.SerializeObject(_colors);
-        await File.WriteAllTextAsync(JsonFilePath, json);
     }
 
 }

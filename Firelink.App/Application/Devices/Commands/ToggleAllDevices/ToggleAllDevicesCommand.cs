@@ -1,34 +1,39 @@
 ﻿using Firelink.Application.Common.Interfaces;
+using Firelink.Application.Common.Result;
 using Mediator;
-using TuyaConnector.Data;
+using OneOf;
+using OneOf.Types;
 
 namespace Firelink.Application.Devices.Commands.ToggleAllDevices;
 
-public record ToggleAllDevicesCommand(bool Power) : IRequest<bool>
+public record ToggleAllDevicesCommand(bool Power) : IRequest<OneOf<Success, WledHttpError>>
 {
     public static readonly ToggleAllDevicesCommand Default = new(true);
 }
 
-public sealed class ToggleAllDevicesCommandHandler : IRequestHandler<ToggleAllDevicesCommand, bool>
+public sealed class ToggleAllDevicesCommandHandler : IRequestHandler<ToggleAllDevicesCommand, OneOf<Success, WledHttpError>>
 {
-    private readonly ITuyaConnector _tuyaConnector;
+    private readonly IWledService _wledService;
 
-    public ToggleAllDevicesCommandHandler(ITuyaConnector tuyaConnector)
+    public ToggleAllDevicesCommandHandler(IWledService wledService)
     {
-        _tuyaConnector = tuyaConnector;
+        _wledService = wledService;
     }
 
-    public async ValueTask<bool> Handle(ToggleAllDevicesCommand request, CancellationToken cancellationToken)
+    public async ValueTask<OneOf<Success, WledHttpError>> Handle(ToggleAllDevicesCommand request, CancellationToken cancellationToken)
     {
-        var devices = await _tuyaConnector.GetUserDevices(cancellationToken);
-        var command = new Command
+        try
         {
-            Code = LedCommands.Power,
-            Value = request.Power,
-        };
-
-        var deviceTasks = devices.Select(device => _tuyaConnector.SendUpdateCommandToDevice(device.Id, command, cancellationToken));
-        await Task.WhenAll(deviceTasks);
-        return true;
+            await _wledService.TurnOn(cancellationToken);
+            return new Success();
+        }
+        catch (HttpRequestException ex)
+        {
+            return new WledHttpError
+            {
+                code = ((int)ex.StatusCode.GetValueOrDefault()),
+                message = ex.Message,
+            };
+        }
     }
 }

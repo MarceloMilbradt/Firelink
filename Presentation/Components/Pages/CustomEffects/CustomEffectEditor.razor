@@ -1,0 +1,185 @@
+﻿@page "/custom/{Id?}"
+@using Firelink.Application.CustomEffects.Commands.CreateCustomEffect
+@using Firelink.Application.CustomEffects.Queries.GetCustomEffect
+@using System.ComponentModel.DataAnnotations
+@using Firelink.Application.WLed.Queries.Effects
+@using Firelink.Application.WLed.Queries.Palettes
+@using Firelink.Domain.CustomEffects
+@using Firelink.Presentation.Components.Pages.CustomEffects;
+@inject ISender Mediator
+@inherits AuthenticatedComponent
+@rendermode InteractiveServer
+
+<PageTitle>Firelink</PageTitle>
+
+<EditForm EditContext="editContext" OnValidSubmit="Submit" FormName="CustomEffect">
+    <div class="container col-md-6 py-2 px-4 text-light">
+        <DataAnnotationsValidator />
+        <!-- URL Input -->
+        @if (Model.Id != "Default")
+        {
+            <div class="mb-3">
+                <label for="customEffectUrl" class="form-label">Url</label>
+                <InputText @bind-Value="Model!.Url" class="form-control bg-dark text-light" id="customEffectUrl"></InputText>
+            </div>
+        }
+
+        <!-- Configuration Type Dropdown -->
+        <div class="mb-3">
+            <label for="customEffectType" class="form-label">Configuration Type</label>
+            <InputSelect @bind-Value="Model!.Type" class="form-select bg-dark text-light" id="customEffectType">
+                <option value="@ConfigurationType.Preset">Preset</option>
+                <option value="@ConfigurationType.Effect">Effect</option>
+            </InputSelect>
+        </div>
+
+
+        @if (Model.Type == ConfigurationType.Preset)
+        {
+            <div class="mb-3">
+                <label for="customEffectPresetId" class="form-label">Wled Preset Id</label>
+                <InputNumber @bind-Value="Model!.PresetId" class="form-control bg-dark text-light" id="customEffectPresetId"></InputNumber>
+            </div>
+        }
+        else if (Model.Type == ConfigurationType.Effect)
+        {
+            <div class="mb-3">
+                <label for="customEffectEffectId" class="form-label">Wled Effect Id</label>
+                <InputNumber @bind-Value="Model!.EffectId" class="form-control bg-dark text-light" id="customEffectEffectId" @onblur="OnEffectIdChanged"></InputNumber>
+                @if (EffectName != null)
+                {
+                    <span class="text-light">Effect Name: @EffectName</span>
+                }
+            </div>
+            <div class="mb-3">
+                <label for="customEffectPaletteId" class="form-label">Wled Color Palette Id</label>
+                <InputNumber @bind-Value="Model!.PaletteId" class="form-control bg-dark text-light" id="customEffectPaletteId" @onblur="OnPaletteIdChanged"></InputNumber>
+                @if (PaletteName != null)
+                {
+                    <span class="text-light">Palette Name: @PaletteName</span>
+                }
+            </div>
+        }
+
+        <div class="mb-3">
+            <ValidationSummary />
+        </div>
+
+        <div class="mb-3">
+            <ErrorAlert ErrorMessage="@ErrorMessage" />
+        </div>
+
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success"><i class="bi bi-floppy"></i></button>
+            <a class="btn btn-danger" href="/customization"><i class="bi bi-arrow-return-left"></i></a>
+        </div>
+
+    </div>
+</EditForm>
+
+@code {
+    private EditContext? editContext;
+
+    [SupplyParameterFromForm]
+    public CustomEffectModel Model { get; set; } = new CustomEffectModel();
+
+    [Parameter]
+    public string? Id { get; set; }
+
+    private string EffectName { get; set; } = string.Empty;
+    private string PaletteName { get; set; } = string.Empty;
+    private string? ErrorMessage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(Id))
+        {
+            Model ??= new();
+        }
+        else
+        {
+            var effectResult = await Mediator.Send(new GetCustomEffectByIdQuery(Id));
+            effectResult.Switch(currentConfig =>
+            {
+                Model = new()
+                    {
+                        Url = currentConfig.Url,
+                        PresetId = currentConfig.PresetId,
+                        EffectId = currentConfig.EffectId,
+                        Type = currentConfig.EffectType,
+                        Id = currentConfig.ItemId,
+                        PaletteId = currentConfig.PaletteId
+                    };
+            }, none =>
+            {
+                NavigationManager.NavigateTo("/customization");
+            });
+
+        }
+        editContext = new(Model);
+        await Task.WhenAll(LoadEffectName(), LoadPaletteName());
+    }
+
+    private async Task Submit()
+    {
+        string? errorMessage = null;
+        if (Model.Id == "Default")
+        {
+            var response = await Mediator.Send(new UpdateDefaultEffectCommand(Model.PaletteId ?? 0, Model.PresetId ?? 0, Model.EffectId ?? 0));
+            errorMessage = response.Match(s => null, e => "Unable to update the default effect");
+        }
+        else if (Model.Type == ConfigurationType.Preset)
+        {
+            var response = await Mediator.Send(CreateCustomEffectCommand.FromPreset(Model.PresetId ?? 0, new Uri(Model.Url!)));
+            errorMessage = response.Match(s => null, n => "The url is not a valid spotify, Album or Track Url", e => "Unable to update the default effect");
+        }
+        else if (Model.Type == ConfigurationType.Effect)
+        {
+            var response = await Mediator.Send(CreateCustomEffectCommand.FromEffect(Model.EffectId ?? 0, Model.PaletteId ?? 0, new Uri(Model.Url!)));
+            errorMessage = response.Match(s => null, n => "The url is not a valid spotify, Album or Track Url", e => "Unable to update the default effect");
+        }
+
+        if (errorMessage != null)
+        {
+            ErrorMessage = errorMessage;
+            return;
+        }
+        NavigationManager.NavigateTo("/customization");
+    }
+
+    private async Task OnEffectIdChanged(FocusEventArgs e)
+    {
+        await LoadEffectName();
+    }
+
+    private async Task OnPaletteIdChanged(FocusEventArgs e)
+    {
+        await LoadPaletteName();
+    }
+
+
+    private async Task LoadEffectName()
+    {
+        if (Model.EffectId == null)
+        {
+            return;
+        }
+        var effectResponse = await Mediator.Send(new GetEffectQuery(Convert.ToInt32(Model.EffectId)));
+        EffectName = effectResponse.Match(e => e, n => null);
+    }
+
+    private async Task LoadPaletteName()
+    {
+        if (Model.PaletteId == null)
+        {
+            return;
+        }
+        var paletteResponse = await Mediator.Send(new GetPaletteQuery(Convert.ToInt32(Model.PaletteId)));
+        PaletteName = paletteResponse.Match(e => e, n => null);
+
+    }
+
+
+
+}

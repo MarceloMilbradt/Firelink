@@ -1,4 +1,4 @@
-﻿using Firelink.App.Shared;
+﻿using Firelink.Domain;
 
 namespace Firelink.Application.Common.Interfaces;
 

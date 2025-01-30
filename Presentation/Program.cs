@@ -3,6 +3,7 @@ using Firelink.Infrastructure;
 using Firelink.Application;
 using Firelink.Presentation.Components;
 using Firelink.Presentation.Endpoints;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,9 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddApiServices();
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
+
+Log.Information("Starting up!");
 
 var app = builder.Build();
 
@@ -28,4 +31,17 @@ app.MapAuthEndpoints();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.Run();
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Host terminated unexpectedly");
+    throw;
+}
+finally
+{
+    Log.Information("Closing Application");
+    Log.CloseAndFlush();
+}

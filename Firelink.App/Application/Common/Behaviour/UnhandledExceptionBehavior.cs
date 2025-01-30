@@ -1,11 +1,11 @@
 ﻿using Mediator;
 using Microsoft.Extensions.Logging;
 
-namespace Firelink.Application.Common.Behavior;
+namespace Firelink.Application.Common.Behaviour;
 
 public sealed class UnhandledExceptionBehavior<TRequest, TResponse>(ILogger<TRequest> logger) : IPipelineBehavior<TRequest, TResponse> where TRequest : IMessage
 {
-    public ValueTask<TResponse> Handle(TRequest request,  CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)
+    public ValueTask<TResponse> Handle(TRequest request, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)
     {
         try
         {

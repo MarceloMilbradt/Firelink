@@ -1,29 +1,36 @@
 ﻿using System.Drawing;
 using System.Text.RegularExpressions;
-using Firelink.App.Shared;
 using HtmlAgilityPack;
 
 namespace Firelink.Infrastructure.Common.Colors;
 
 public static partial class ColorScraper
 {
-    public static async Task<Color> ScrapeColorForAlbum(string url)
+    public static async Task<Color> ScrapeColorForAlbum(string url, CancellationToken cancellationToken)
     {
-        var web = new HtmlWeb();
-        var doc = await web.LoadFromWebAsync(url);
+        try
+        {
+            var web = new HtmlWeb();
+            web.CaptureRedirect = true;
+            web.UseCookies = true;
+           
+            var doc = await web.LoadFromWebAsync(url, cancellationToken);
+            
 
-        var mainDiv = doc.GetElementbyId("main");
-        var target = mainDiv
-            .ChildNodes[1]
-            .FirstChild
-            .FirstChild
-            .FirstChild
-            .FirstChild
-            .ChildNodes[1]
-            .FirstChild;
+            var mainDiv = doc.GetElementbyId("main");
+            var target = mainDiv.SelectNodes("//div[contains(@style, 'background:linear-gradient')]").FirstOrDefault();
+            if(target == null)
+            {
+                target = mainDiv.SelectNodes("//div[contains(@style, 'background: linear-gradient')]").FirstOrDefault();
+            }
 
-        var color = GetColorForElement(target);
-        return color;
+            var color = GetColorForElement(target);
+            return color;
+        }
+        catch (Exception)
+        {
+            return Color.Black;
+        }
     }
 
     private static Color GetColorForElement(HtmlNode node)
