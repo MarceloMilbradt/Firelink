@@ -17,7 +17,7 @@ public class RequiredIfType : ValidationAttribute
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         var model = (CustomEffectModel)validationContext.ObjectInstance;
-        if (model.Type == _type &&  (value == null || (int)value == 0) )
+        if (model.Type == _type &&  (value == null || (int)value < 0) )
         {
             return new ValidationResult(ErrorMessage ?? $"This Field is required when the type is {_type}.");
         }

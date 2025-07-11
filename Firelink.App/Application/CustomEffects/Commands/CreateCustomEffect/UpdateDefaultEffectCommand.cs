@@ -7,7 +7,7 @@ using OneOf.Types;
 
 namespace Firelink.Application.CustomEffects.Commands.CreateCustomEffect;
 
-public sealed record UpdateDefaultEffectCommand(int PaletteId, int PresetId, int EffectId) : IRequest<OneOf<Success, Error>>;
+public sealed record UpdateDefaultEffectCommand(int PaletteId, int PresetId, int EffectId, ConfigurationType ConfigurationType) : IRequest<OneOf<Success, Error>>;
 
 public sealed class UpdateDefaultEffectCommandHandler : IRequestHandler<UpdateDefaultEffectCommand, OneOf<Success, Error>>
 {
@@ -21,12 +21,7 @@ public sealed class UpdateDefaultEffectCommandHandler : IRequestHandler<UpdateDe
 
     public async ValueTask<OneOf<Success, Error>> Handle(UpdateDefaultEffectCommand request, CancellationToken cancellationToken)
     {
-        var configurationType = request switch
-        {
-            { PresetId: > 0 } => ConfigurationType.Preset,
-            { EffectId: > 0 } => ConfigurationType.Effect,
-            _ => throw new NotImplementedException(),
-        };
+        var configurationType = request.ConfigurationType;
 
 
         var configuration = new CustomEffect

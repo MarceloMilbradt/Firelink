@@ -15,6 +15,18 @@ builder.Services.AddApiServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log-.log",
+    rollingInterval: RollingInterval.Day,
+    retainedFileCountLimit: 2,
+    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext} {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+
+builder.Services.AddSerilog(logger: Log.Logger, dispose: true);
+
+
 Log.Information("Starting up!");
 
 var app = builder.Build();

@@ -126,7 +126,7 @@
         string? errorMessage = null;
         if (Model.Id == "Default")
         {
-            var response = await Mediator.Send(new UpdateDefaultEffectCommand(Model.PaletteId ?? 0, Model.PresetId ?? 0, Model.EffectId ?? 0));
+            var response = await Mediator.Send(new UpdateDefaultEffectCommand(Model.PaletteId ?? 0, Model.PresetId ?? 0, Model.EffectId ?? 0, Model.Type));
             errorMessage = response.Match(s => null, e => "Unable to update the default effect");
         }
         else if (Model.Type == ConfigurationType.Preset)
